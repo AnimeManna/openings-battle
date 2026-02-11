@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from "react";
 import clsx from "clsx";
-import classess from "./Tooltip.module.scss";
+import classess from "./tooltip.module.scss";
 
 interface TooltipProps {
   label: string | ReactNode;
