@@ -1,7 +1,7 @@
 import { forwardRef, type ComponentProps } from "react";
 import clsx from "clsx";
 import { HiChevronDown } from "react-icons/hi2";
-import s from "./Select.module.scss";
+import classess from "./select.module.scss";
 
 interface SelectOption {
   value: string | number;
@@ -21,13 +21,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     ref,
   ) => {
     return (
-      <div className={clsx(s.wrapper, className)}>
-        {label && <label className={s.label}>{label}</label>}
+      <div className={clsx(classess.wrapper, className)}>
+        {label && <label className={classess.label}>{label}</label>}
 
-        <div className={s.selectContainer}>
+        <div className={classess.selectContainer}>
           <select
             ref={ref}
-            className={clsx(s.select, error && s.hasError)}
+            className={clsx(classess.select, error && classess.hasError)}
             {...props}
           >
             {placeholder && (
@@ -45,12 +45,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {!options && children}
           </select>
 
-          <div className={s.icon}>
+          <div className={classess.icon}>
             <HiChevronDown size={18} />
           </div>
         </div>
 
-        {error && <span className={s.error}>{error}</span>}
+        {error && <span className={classess.error}>{error}</span>}
       </div>
     );
   },
