@@ -66,7 +66,7 @@ export const RateOpening: React.FC = () => {
   return (
     <div className={classess.container} {...swipeHandlers}>
       <div className={classess.left}>
-        {prevId && <NavCorner direction="left" link={`openings/${prevId}`} />}
+        {prevId && <NavCorner direction="left" link={`/openings/${prevId}`} />}
       </div>
       <div className={classess.center}>
         <p className={classess.count}>
@@ -111,7 +111,7 @@ export const RateOpening: React.FC = () => {
       </div>
 
       <div className={classess.right}>
-        {prevId && <NavCorner direction="right" link={`openings/${nextId}`} />}
+        {prevId && <NavCorner direction="right" link={`/openings/${nextId}`} />}
       </div>
     </div>
   );
