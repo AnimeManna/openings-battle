@@ -1,0 +1,94 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 44px;
+  padding: 0 20px;
+
+  border: none;
+  border-radius: $radius-md;
+
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($accent-primary, 0.3);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    filter: grayscale(1);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+}
+
+.primary {
+  background-color: $accent-primary;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background-color: lighten($accent-primary, 5%);
+    box-shadow: 0 4px 12px rgba($accent-primary, 0.3);
+  }
+}
+
+.secondary {
+  background-color: $bg-surface;
+  color: $text-main;
+  border: 1px solid $border-color;
+
+  &:hover:not(:disabled) {
+    background-color: lighten($bg-surface, 5%);
+    border-color: lighten($border-color, 10%);
+  }
+}
+
+.danger {
+  background-color: rgba($accent-danger, 0.1);
+  color: $accent-danger;
+  border: 1px solid rgba($accent-danger, 0.2);
+
+  &:hover:not(:disabled) {
+    background-color: rgba($accent-danger, 0.2);
+    border-color: $accent-danger;
+  }
+}
+
+.fullWidth {
+  width: 100%;
+  display: flex;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

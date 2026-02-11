@@ -1,0 +1,99 @@
+.container {
+  display: flex;
+  gap: 16px;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 16px;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.thumbnailWrapper {
+  flex-shrink: 0;
+  width: 400px;
+  aspect-ratio: 16 / 9;
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  position: relative;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 16px;
+  row-gap: 8px;
+  align-content: start;
+  padding: 16px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $text-muted;
+  padding-top: 2px;
+}
+
+.value {
+  font-size: 14px;
+  color: $text-main;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.link {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: $accent-primary;
+  padding: 16px;
+
+  transition: background-color 0.1s ease-in-out;
+
+  &:hover {
+    background-color: rgba($accent-primary, 0.1);
+  }
+}
+
+.raiting {
+  display: flex;
+  row-gap: 16px;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+
+  &__title {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__list {
+    display: flex;
+    column-gap: 16px;
+    justify-content: center;
+  }
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+}

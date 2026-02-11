@@ -1,0 +1,35 @@
+/* $- Backgrounds $- */
+/* Основной фон (почти черный, но мягче) */
+$bg-main: #0f1115;
+/* Фон карточек и нижней панели */
+$bg-surface: #181b21;
+/* Фон для активных элементов или ховеров */
+$bg-elevated: #232730;
+
+/* $- Text $- */
+/* Белый, но не режет глаз */
+$text-main: #ededed;
+/* Серый для второстепенной инфы */
+$text-muted: #9ca3af;
+
+/* $- Accents (Game Vibes) $- */
+/* Основной цвет (Indigo/Violet) - ассоциируется с магией/технологиями */
+$accent-primary: #6366f1;
+/* Цвет при наведении */
+$accent-hover: #818cf8;
+/* Золото для "Protect" / "Rank 1" */
+$accent-gold: #fbbf24;
+/* Красный для ошибок или кнопки удаления */
+$accent-danger: #ef4444;
+
+/* $- UI Elements $- */
+$border-color: #2e333d;
+$glass-bg: rgba(24, 27, 33, 0.85); /* Полупрозрачность для футера */
+
+/* $- Spacing & Radius $- */
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 20px;
+$radius-full: 9999px;
+
+$nav-height: 70px; /* Высота футера */

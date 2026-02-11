@@ -1,0 +1,46 @@
+.container {
+  border-radius: 50%;
+  border: 2px solid $border-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: $text-muted;
+  transition: all 0.2s;
+  background-color: rgba(0, 0, 0, 0.2);
+  text-align: center;
+
+  cursor: pointer;
+  &:hover:not(:disabled):not(.active) {
+    background-color: lighten($bg-surface, 5%);
+    color: $text-main;
+    border-color: lighten($border-color, 10%);
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.md {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+}
+
+.xl {
+  width: 64px;
+  height: 64px;
+  font-size: 24px;
+}
+
+.active {
+  border-color: $accent-primary;
+  color: $accent-primary;
+  background-color: rgba($accent-primary, 0.1);
+
+  &:hover:not(:disabled) {
+    background-color: lighten($accent-primary, 5%);
+    box-shadow: 0 4px 12px rgba($accent-primary, 0.4);
+  }
+}

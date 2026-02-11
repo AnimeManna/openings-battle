@@ -1,0 +1,104 @@
+import { Navigate, useParams } from "react-router";
+import classess from "./rate-opening.module.scss";
+import { useOpeningsStore } from "@/entities/openings/model";
+import { useMemo } from "react";
+import { APP_CONFIG } from "@/shared/config";
+import { RateButton } from "@/shared/ui/rate-button/rate-button";
+import { ShieldButton } from "@/features/opening/shield-button/shield-button";
+import { useOpeningVote } from "@/entities/votes/useOpeningVote";
+import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
+import { useVotesStore } from "@/entities/votes/model";
+import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
+
+export const RateOpening: React.FC = () => {
+  const params = useParams<{ id: string }>();
+
+  const { openings } = useOpeningsStore();
+  const { myVotes } = useVotesStore();
+
+  const { rate, onRate, isProtected, onProtect } = useOpeningVote(
+    params.id ?? "",
+  );
+
+  const navigation = useMemo(() => {
+    if (!params.id || openings.length === 0) {
+      return { prevId: null, nextId: null, current: null };
+    }
+
+    const currentIndex = openings.findIndex((op) => op.id === params.id);
+
+    if (currentIndex === -1)
+      return { prevId: null, nextId: null, current: null };
+
+    return {
+      prevId: currentIndex > 0 ? openings[currentIndex - 1].id : null,
+      nextId:
+        currentIndex < openings.length - 1
+          ? openings[currentIndex + 1].id
+          : null,
+      opening: openings[currentIndex],
+    };
+  }, [openings, params.id]);
+
+  const { opening, prevId, nextId } = navigation;
+
+  if (!opening) {
+    return <Navigate to="/" />;
+  }
+
+  const rateOpening = (value: string | number) => {
+    const numValue = Number(value);
+    if (Number.isNaN(numValue)) return;
+    onRate(numValue);
+  };
+
+  return (
+    <div className={classess.container}>
+      <div className={classess.left}>
+        {prevId && <NavCorner direction="left" link={`/openings/${prevId}`} />}
+      </div>
+      <div className={classess.center}>
+        <p className={classess.count}>
+          Оценено {Object.values(myVotes).length} из {openings.length}
+        </p>
+        <div className={classess.wrapper}>
+          <p className={classess.title}>{opening.title}</p>
+          <iframe
+            className={classess.thumbnailWrapper}
+            src={`https://www.youtube.com/embed/${getYoutubeId(opening.youtubeUrl)}`}
+            title="Preview"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+
+          <div className={classess.infoGrid}>
+            <div className={classess.label}>Аниме</div>
+            <div className={classess.value}>{opening.anime}</div>
+
+            <div className={classess.label}>Номер Опенинга</div>
+            <div className={classess.value}>{opening.orderNumber}</div>
+          </div>
+
+          <ul className={classess.list}>
+            {Array.from({ length: APP_CONFIG.MAX_SCORE })
+              .map((_, index) => index + 1)
+              .map((rating) => (
+                <li key={rating}>
+                  <RateButton
+                    value={rating}
+                    onClick={rateOpening}
+                    isActive={rate === rating}
+                    size="xl"
+                  />
+                </li>
+              ))}
+          </ul>
+          <ShieldButton isActive={isProtected} onClick={onProtect} />
+        </div>
+      </div>
+      <div className={classess.right}>
+        {nextId && <NavCorner direction="right" link={`/openings/${nextId}`} />}
+      </div>
+    </div>
+  );
+};

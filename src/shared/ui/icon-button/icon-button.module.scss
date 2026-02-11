@@ -1,0 +1,112 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: $text-main;
+  user-select: none;
+
+  &:active:not(:disabled) {
+    transform: scale(0.92);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(1);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($accent-primary, 0.4);
+  }
+}
+
+.sm {
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+}
+
+.md {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.lg {
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+}
+
+.xl {
+  width: 80px;
+  height: 80px;
+  font-size: 48px;
+}
+
+.primary {
+  background-color: $accent-primary;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: lighten($accent-primary, 5%);
+    box-shadow: 0 4px 12px rgba($accent-primary, 0.4);
+  }
+}
+
+.secondary {
+  background-color: $bg-surface;
+  border: 1px solid $border-color;
+  color: $text-muted;
+
+  &:hover:not(:disabled) {
+    background-color: lighten($bg-surface, 5%);
+    color: $text-main;
+    border-color: lighten($border-color, 10%);
+  }
+}
+
+.ghost {
+  background-color: transparent;
+  color: $text-muted;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: $text-main;
+  }
+}
+
+.danger {
+  background-color: rgba($accent-danger, 0.1);
+  color: $accent-danger;
+
+  &:hover:not(:disabled) {
+    background-color: rgba($accent-danger, 0.2);
+    box-shadow: 0 0 8px rgba($accent-danger, 0.2);
+  }
+}
+
+.spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

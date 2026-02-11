@@ -1,0 +1,31 @@
+.container {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-md;
+  border: 2px solid $border-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: $text-muted;
+  transition: all 0.2s;
+  background-color: rgba(0, 0, 0, 0.2);
+  text-align: center;
+
+  font-size: 48px;
+
+  cursor: pointer;
+
+  &:hover:not(:disabled):not(.active) {
+    background-color: lighten($bg-surface, 5%);
+    color: $text-main;
+    border-color: lighten($border-color, 10%);
+  }
+}
+
+.active {
+  border-color: $accent-gold;
+  color: $accent-gold;
+  box-shadow: 0 0 10px rgba($accent-gold, 0.2);
+}

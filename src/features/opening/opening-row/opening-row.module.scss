@@ -1,0 +1,90 @@
+.row {
+  background-color: $bg-surface;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: lighten($border-color, 10%);
+  }
+
+  &.isOpen {
+    border-color: $accent-primary;
+    background-color: lighten($bg-surface, 2%);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  min-height: 60px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 15px;
+  color: $text-main;
+}
+
+.anime {
+  font-size: 12px;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusRing {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid $border-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: $text-muted;
+  transition: all 0.2s;
+  background-color: rgba(0, 0, 0, 0.2);
+
+  &.voted {
+    border-color: $accent-primary;
+    color: $accent-primary;
+    background-color: rgba($accent-primary, 0.1);
+  }
+
+  &.protected {
+    border-color: $accent-gold;
+    color: $accent-gold;
+    box-shadow: 0 0 10px rgba($accent-gold, 0.2);
+  }
+}
+
+.bodyWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bodyWrapper.open {
+  grid-template-rows: 1fr;
+}
+
+.bodyInner {
+  overflow: hidden;
+}
+
+.content {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}

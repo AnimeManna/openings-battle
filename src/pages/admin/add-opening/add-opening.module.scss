@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  row-gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  color: $text-main;
+  font-size: 32px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: clamp(500px, 100%, 800px);
+  gap: 8px;
+}

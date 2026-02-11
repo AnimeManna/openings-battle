@@ -1,0 +1,53 @@
+import { type ReactNode, useState } from "react";
+import clsx from "clsx";
+import { RiShieldStarFill } from "react-icons/ri";
+import classess from "./opening-row.module.scss";
+import type { Opening } from "../../../entities/openings/types";
+import { useOpeningVote } from "@/entities/votes/useOpeningVote";
+
+interface OpeningRowProps {
+  opening: Opening;
+  myVote?: number;
+  isProtected?: boolean;
+  children: ReactNode;
+}
+
+export const OpeningRow = ({ opening, children }: OpeningRowProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { rate, isProtected } = useOpeningVote(opening.id);
+
+  const renderStatusRing = () => {
+    if (isProtected) {
+      return (
+        <div className={clsx(classess.statusRing, classess.protected)}>
+          <RiShieldStarFill size={18} />
+        </div>
+      );
+    }
+    if (rate) {
+      return (
+        <div className={clsx(classess.statusRing, classess.voted)}>{rate}</div>
+      );
+    }
+    return <div className={classess.statusRing} />;
+  };
+
+  return (
+    <div className={clsx(classess.row, isOpen && classess.isOpen)}>
+      <div className={classess.header} onClick={() => setIsOpen(!isOpen)}>
+        <div className={classess.info}>
+          <span className={classess.title}>{opening.title}</span>
+          <span className={classess.anime}>{opening.anime}</span>
+        </div>
+
+        {renderStatusRing()}
+      </div>
+
+      <div className={clsx(classess.bodyWrapper, isOpen && classess.open)}>
+        <div className={classess.bodyInner}>
+          <div className={classess.content}>{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
