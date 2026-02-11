@@ -1,5 +1,5 @@
 .container {
-  border-radius: 50%;
+  border-radius: $radius-sm;
   border: 2px solid $border-color;
   display: flex;
   align-items: center;

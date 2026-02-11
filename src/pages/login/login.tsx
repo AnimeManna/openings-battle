@@ -49,7 +49,7 @@ export const LoginPage: React.FC = () => {
     if (success) {
       navigate("/");
     } else {
-      setError("Неверный пин-код, братан");
+      setError("Неверный пин-код");
     }
     setLoading(false);
   };

@@ -10,7 +10,7 @@ export const Openings: React.FC = () => {
   const openings = useOpeningsStore((state) => state.openings);
   const myVotes = useVotesStore((state) => state.myVotes);
 
-  const sortedOpenings = useMemo(() => {
+  const orderedOpenings = useMemo(() => {
     return [...openings].sort((a, b) => {
       const voteA = myVotes[a.id];
       const voteB = myVotes[b.id];
@@ -42,7 +42,7 @@ export const Openings: React.FC = () => {
     <div className={classess.container}>
       <p className={classess.title}>Ваши оценки</p>
       <ul className={classess.list}>
-        {sortedOpenings.map((opening) => (
+        {orderedOpenings.map((opening) => (
           <li key={opening.id}>
             <OpeningRow opening={opening}>
               <OpeningListPreview opening={opening} />

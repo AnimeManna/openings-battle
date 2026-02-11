@@ -20,15 +20,21 @@ export const OpeningListPreview: React.FC<OpeningInfoProps> = ({ opening }) => {
     onRate(numValue);
   };
 
+  const getYoutubuThumbNail = (youtubeUrl: string) => {
+    return (
+      "http://img.youtube.com/vi/" +
+      getYoutubeId(youtubeUrl) +
+      "/maxresdefault.jpg"
+    );
+  };
+
   return (
     <div className={classess.container}>
       <div className={classess.wrapper}>
-        <iframe
+        <img
           className={classess.thumbnailWrapper}
-          src={`https://www.youtube.com/embed/${getYoutubeId(opening.youtubeUrl)}`}
+          src={getYoutubuThumbNail(opening.youtubeUrl)}
           title="Preview"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
         />
 
         <div className={classess.infoGrid}>
@@ -59,9 +65,9 @@ export const OpeningListPreview: React.FC<OpeningInfoProps> = ({ opening }) => {
           </ul>
         </div>
         <ShieldButton isActive={isProtected} onClick={onProtect} />
-      </div>
-      <div>
-        <NavCorner link={opening.id} />
+        <div className={classess.link}>
+          <NavCorner link={opening.id} />
+        </div>
       </div>
     </div>
   );

@@ -36,8 +36,8 @@ export const OpeningRow = ({ opening, children }: OpeningRowProps) => {
     <div className={clsx(classess.row, isOpen && classess.isOpen)}>
       <div className={classess.header} onClick={() => setIsOpen(!isOpen)}>
         <div className={classess.info}>
-          <span className={classess.title}>{opening.title}</span>
-          <span className={classess.anime}>{opening.anime}</span>
+          <p className={classess.title}>{opening.title}</p>
+          <p className={classess.anime}>{opening.anime}</p>
         </div>
 
         {renderStatusRing()}

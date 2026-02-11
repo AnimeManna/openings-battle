@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import classess from "./rate-opening.module.scss";
 import { useOpeningsStore } from "@/entities/openings/model";
 import { useMemo } from "react";
@@ -9,9 +9,11 @@ import { useOpeningVote } from "@/entities/votes/useOpeningVote";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
 import { useVotesStore } from "@/entities/votes/model";
 import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
+import { useSwipeable } from "react-swipeable";
 
 export const RateOpening: React.FC = () => {
   const params = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const { openings } = useOpeningsStore();
   const { myVotes } = useVotesStore();
@@ -42,6 +44,15 @@ export const RateOpening: React.FC = () => {
 
   const { opening, prevId, nextId } = navigation;
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (nextId) navigate(`/openings/${nextId}`);
+    },
+    onSwipedRight: () => {
+      if (prevId) navigate(`/openings/${prevId}`);
+    },
+  });
+
   if (!opening) {
     return <Navigate to="/" />;
   }
@@ -53,9 +64,9 @@ export const RateOpening: React.FC = () => {
   };
 
   return (
-    <div className={classess.container}>
+    <div className={classess.container} {...swipeHandlers}>
       <div className={classess.left}>
-        {prevId && <NavCorner direction="left" link={`/openings/${prevId}`} />}
+        {prevId && <NavCorner direction="left" link={`openings/${prevId}`} />}
       </div>
       <div className={classess.center}>
         <p className={classess.count}>
@@ -79,25 +90,28 @@ export const RateOpening: React.FC = () => {
             <div className={classess.value}>{opening.orderNumber}</div>
           </div>
 
-          <ul className={classess.list}>
-            {Array.from({ length: APP_CONFIG.MAX_SCORE })
-              .map((_, index) => index + 1)
-              .map((rating) => (
-                <li key={rating}>
-                  <RateButton
-                    value={rating}
-                    onClick={rateOpening}
-                    isActive={rate === rating}
-                    size="xl"
-                  />
-                </li>
-              ))}
-          </ul>
+          <div className={classess.rating}>
+            <ul className={classess.list}>
+              {Array.from({ length: APP_CONFIG.MAX_SCORE })
+                .map((_, index) => index + 1)
+                .map((rating) => (
+                  <li key={rating}>
+                    <RateButton
+                      value={rating}
+                      onClick={rateOpening}
+                      isActive={rate === rating}
+                      size="xl"
+                    />
+                  </li>
+                ))}
+            </ul>
+          </div>
           <ShieldButton isActive={isProtected} onClick={onProtect} />
         </div>
       </div>
+
       <div className={classess.right}>
-        {nextId && <NavCorner direction="right" link={`/openings/${nextId}`} />}
+        {prevId && <NavCorner direction="right" link={`openings/${nextId}`} />}
       </div>
     </div>
   );
