@@ -8,6 +8,7 @@ import { Layout } from "@/app/layout/layout";
 import { HomeComponent } from "@/pages/home/home";
 import { Openings } from "@/pages/openings/openings";
 import { RateOpening } from "@/pages/rate-opening/rate-opening";
+import { NotFoundPage } from "@/pages/not-found/not-found";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
         path: "/",
         element: <Layout />,
         children: [
+          { path: "*", element: <NotFoundPage /> },
           { index: true, element: <HomeComponent /> },
           {
             path: "openings",
