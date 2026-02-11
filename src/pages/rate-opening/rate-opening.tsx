@@ -32,6 +32,7 @@ export const RateOpening: React.FC = () => {
     if (currentIndex === -1)
       return { prevId: null, nextId: null, current: null };
 
+    console.log(currentIndex, openings.length);
     return {
       prevId: currentIndex > 0 ? openings[currentIndex - 1].id : null,
       nextId:
@@ -111,7 +112,7 @@ export const RateOpening: React.FC = () => {
       </div>
 
       <div className={classess.right}>
-        {prevId && <NavCorner direction="right" link={`/openings/${nextId}`} />}
+        {nextId && <NavCorner direction="right" link={`/openings/${nextId}`} />}
       </div>
     </div>
   );
