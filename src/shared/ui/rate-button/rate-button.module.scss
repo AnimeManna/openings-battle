@@ -11,14 +11,17 @@
   text-align: center;
 
   cursor: pointer;
-  &:hover:not(:disabled):not(.active) {
-    background-color: lighten($bg-surface, 5%);
-    color: $text-main;
-    border-color: lighten($border-color, 10%);
-  }
 
-  &:hover {
-    transform: scale(1.1);
+  @media (hover: hover) {
+    &:hover:not(:disabled):not(.active) {
+      background-color: lighten($bg-surface, 5%);
+      color: $text-main;
+      border-color: lighten($border-color, 10%);
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 }
 
