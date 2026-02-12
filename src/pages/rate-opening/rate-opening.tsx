@@ -1,22 +1,20 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import classess from "./rate-opening.module.scss";
-import { useOpeningsStore } from "@/entities/openings/model";
 import { useMemo } from "react";
 import { APP_CONFIG } from "@/shared/config";
 import { RateButton } from "@/shared/ui/rate-button/rate-button";
 import { ShieldButton } from "@/features/opening/shield-button/shield-button";
 import { useOpeningVote } from "@/entities/votes/useOpeningVote";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
-import { useVotesStore } from "@/entities/votes/model";
 import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
 import { useSwipeable } from "react-swipeable";
+import { useSortedOpenings } from "@/features/opening/hooks/useSortedOpenings";
 
 export const RateOpening: React.FC = () => {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { openings } = useOpeningsStore();
-  const { myVotes } = useVotesStore();
+  const { sortedOpenings: openings } = useSortedOpenings();
 
   const { rate, onRate, isProtected, onProtect } = useOpeningVote(
     params.id ?? "",
@@ -70,9 +68,6 @@ export const RateOpening: React.FC = () => {
         {prevId && <NavCorner direction="left" link={`/openings/${prevId}`} />}
       </div>
       <div className={classess.center}>
-        <p className={classess.count}>
-          Оценено {Object.values(myVotes).length} из {openings.length}
-        </p>
         <div className={classess.wrapper}>
           <p className={classess.title}>{opening.title}</p>
           <iframe

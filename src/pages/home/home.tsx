@@ -3,10 +3,10 @@ import classess from "./home.module.scss";
 import { FaVoteYea } from "react-icons/fa";
 import { MdListAlt } from "react-icons/md";
 import { GiTrophyCup } from "react-icons/gi";
-import { useNextOpening } from "@/shared/hooks/useNextOpening";
+import { useSortedOpenings } from "@/features/opening/hooks/useSortedOpenings";
 
 export const HomeComponent: React.FC = () => {
-  const { nextOpening } = useNextOpening();
+  const { nextOpening } = useSortedOpenings();
 
   return (
     <div className={classess.container}>
