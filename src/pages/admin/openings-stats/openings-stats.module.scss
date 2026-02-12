@@ -1,0 +1,58 @@
+.tableWrapper {
+  overflow-x: auto;
+  max-width: 100%;
+  border: 1px solid #333;
+  padding: 8px;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+
+  th,
+  td {
+    padding: 8px;
+    border: 1px solid #333;
+    text-align: center;
+  }
+}
+
+.stickyCol {
+  position: sticky;
+  left: 0;
+  background-color: #1a1a1a;
+  z-index: 2;
+  text-align: left !important;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.rateBadge {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: bold;
+  background: #333;
+
+  /* Раскраска оценок */
+  &[data-val="10"] {
+    background: gold;
+    color: black;
+  }
+  &[data-val="9"] {
+    background: orange;
+    color: black;
+  }
+  &[data-val="1"] {
+    background: red;
+    color: white;
+  }
+}
+
+.empty {
+  color: #444;
+}
