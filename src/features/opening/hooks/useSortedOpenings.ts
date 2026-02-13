@@ -39,7 +39,7 @@ export const useSortedOpenings = () => {
   }, [sortedOpenings, myVotes]);
 
   return {
-    sortedOpenings,
+    sortedOpenings: sortedOpenings,
     nextOpening,
   };
 };

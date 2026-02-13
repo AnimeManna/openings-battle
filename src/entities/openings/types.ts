@@ -15,3 +15,5 @@ export interface Opening {
     avgScore: number;
   };
 }
+
+export type OpeningMap = Record<string, Opening>;

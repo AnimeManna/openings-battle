@@ -8,10 +8,10 @@ import { useOpeningVote } from "@/entities/votes/useOpeningVote";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
 import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
 import { useSwipeable } from "react-swipeable";
-import { useSortedOpenings } from "@/features/opening/hooks/useSortedOpenings";
 import { getVideoEmbedUrl } from "@/shared/helpers/getVideoUrl";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Opening } from "@/entities/openings/types";
+import { usePlaylistStore } from "@/features/playlist/model/store";
 
 const variants = {
   enter: (direction: number) => ({
@@ -34,7 +34,7 @@ export const RateOpening: React.FC = () => {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { sortedOpenings: openings } = useSortedOpenings();
+  const openings = usePlaylistStore((state) => state.playlist);
 
   const { rate, onRate, isProtected, onProtect } = useOpeningVote(
     params.id ?? "",

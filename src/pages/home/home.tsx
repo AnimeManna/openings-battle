@@ -3,10 +3,10 @@ import classess from "./home.module.scss";
 import { FaVoteYea } from "react-icons/fa";
 import { MdListAlt } from "react-icons/md";
 import { GiTrophyCup } from "react-icons/gi";
-import { useSortedOpenings } from "@/features/opening/hooks/useSortedOpenings";
+import { usePlaylistStore } from "@/features/playlist/model/store";
 
 export const HomeComponent: React.FC = () => {
-  const { nextOpening } = useSortedOpenings();
+  const nextOpening = usePlaylistStore((state) => state.nextOpening);
 
   return (
     <div className={classess.container}>

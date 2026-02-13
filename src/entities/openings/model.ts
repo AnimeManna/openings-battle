@@ -1,22 +1,21 @@
 import { create } from "zustand";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "@/shared/firebase";
-import type { Opening } from "./types";
-
+import type { Opening, OpeningMap } from "./types";
 interface OpeningsState {
   openings: Opening[];
-  openingsMap: Record<string, Opening>;
   isLoading: boolean;
   isInitialized: boolean;
-
+  openingsMap: OpeningMap;
   initSubscription: () => () => void;
+  setOpeningsMap: (newOpeningMap: OpeningMap) => void;
 }
 
 export const useOpeningsStore = create<OpeningsState>((set, get) => ({
   openings: [],
-  openingsMap: {},
   isLoading: true,
   isInitialized: false,
+  openingsMap: {},
 
   initSubscription: () => {
     if (get().isInitialized) return () => {};
@@ -29,19 +28,16 @@ export const useOpeningsStore = create<OpeningsState>((set, get) => ({
         id: doc.id,
       })) as Opening[];
 
-      const openingsMap = data.reduce(
-        (map, opening) => ({ ...map, [opening.id]: opening }),
-        {},
-      );
-
       set({
         openings: data,
         isLoading: false,
         isInitialized: true,
-        openingsMap,
       });
     });
 
     return unsubscribe;
+  },
+  setOpeningsMap: (newOpeningsMap: OpeningMap) => {
+    set({ openingsMap: { ...get().openingsMap, ...newOpeningsMap } });
   },
 }));
