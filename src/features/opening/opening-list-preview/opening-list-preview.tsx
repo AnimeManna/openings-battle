@@ -6,6 +6,7 @@ import { RateButton } from "@/shared/ui/rate-button/rate-button";
 import { useOpeningVote } from "@/entities/votes/useOpeningVote";
 import { ShieldButton } from "../shield-button/shield-button";
 import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
+import { useSnackbarStore } from "@/shared/model/snackbar/store";
 
 interface OpeningInfoProps {
   opening: Opening;
@@ -13,11 +14,13 @@ interface OpeningInfoProps {
 
 export const OpeningListPreview: React.FC<OpeningInfoProps> = ({ opening }) => {
   const { rate, onRate, isProtected, onProtect } = useOpeningVote(opening.id);
+  const show = useSnackbarStore((state) => state.show);
 
   const rateOpening = (value: string | number) => {
     const numValue = Number(value);
     if (Number.isNaN(numValue)) return;
     onRate(numValue);
+    show("Ваш голос успешно засчитан", "success", 1000);
   };
 
   const getYoutubuThumbNail = (youtubeUrl: string) => {

@@ -3,14 +3,14 @@ import type { Vote } from "@/entities/votes/types";
 import { create } from "zustand";
 
 interface PlaylistStore {
-  playlistMap: Record<string, Opening>;
+  playlistMap: Map<string, Opening>;
   playlist: Opening[];
   nextOpening: Opening | null;
   generatePlaylist: (openings: Opening[], votes: Record<string, Vote>) => void;
 }
 
 export const usePlaylistStore = create<PlaylistStore>((set, get) => ({
-  playlistMap: {},
+  playlistMap: new Map(),
   playlist: [],
   nextOpening: null,
 
@@ -41,15 +41,19 @@ export const usePlaylistStore = create<PlaylistStore>((set, get) => ({
       return rateB - rateA;
     });
 
-    const copyMap = get().playlistMap;
+    const copyMap = new Map(get().playlistMap);
 
     sortedOpenings.forEach((opening) => {
-      copyMap[opening.id] = opening;
+      if (copyMap.has(opening.id)) {
+        copyMap.set(opening.id, opening);
+      } else {
+        copyMap.set(opening.id, opening);
+      }
     });
 
-    const playlist = Object.values(copyMap);
+    const playlist = Array.from(copyMap.values());
 
-    const nextOpening = sortedOpenings[0];
+    const nextOpening = sortedOpenings.find((op) => !votes[op.id]);
 
     set({ playlistMap: copyMap, playlist, nextOpening });
   },

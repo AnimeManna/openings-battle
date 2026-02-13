@@ -8,4 +8,5 @@ export interface User {
   pin: string;
   role: Role;
   protectionBudget: number;
+  protectionUsed: number;
 }

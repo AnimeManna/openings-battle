@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useVotesStore } from "@/entities/votes/model";
 import { useAuthStore } from "@/entities/auth/model";
 import { usePlaylistStore } from "@/features/playlist/model/store";
+import { Snackbar } from "@/shared/ui/shackbar/snackbar";
 
 export const Layout: React.FC = () => {
   const initOpenings = useOpeningsStore((state) => state.initSubscription);
@@ -33,6 +34,7 @@ export const Layout: React.FC = () => {
 
   return (
     <div className={classess.container}>
+      <Snackbar />
       <div className={classess.outlet}>
         <Outlet />
       </div>

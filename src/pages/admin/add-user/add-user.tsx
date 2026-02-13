@@ -29,6 +29,7 @@ export const AddUserPage: React.FC = () => {
         pin,
         role,
         protectionBudget: APP_CONFIG.DEFAULT_PROTECTION_BUDGET,
+        protectionUsed: 0,
       };
       await setDoc(doc(db, "users", login), user);
 

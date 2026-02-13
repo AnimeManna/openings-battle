@@ -23,7 +23,10 @@ interface VotesState {
     openingId: string,
     rate: number,
   ) => Promise<void>;
-  toggleProtect: (userId: string, openingId: string) => Promise<void>;
+  toggleProtect: (
+    userId: string,
+    openingId: string,
+  ) => Promise<{ status: boolean; message: string }>;
 }
 
 export const useVotesStore = create<VotesState>((set) => ({
@@ -128,7 +131,7 @@ export const useVotesStore = create<VotesState>((set) => ({
           userData?.protectionBudget || APP_CONFIG.DEFAULT_PROTECTION_BUDGET;
 
         if (willBeProtected && currentUsed >= maxBudget) {
-          throw new Error("Нет щитов!");
+          throw new Error("Недостаточно щитов");
         }
 
         const usageDelta = willBeProtected ? 1 : -1;
@@ -157,8 +160,17 @@ export const useVotesStore = create<VotesState>((set) => ({
           { merge: true },
         );
       });
-    } catch (e) {
-      console.error("Toggle failed:", e);
+      return { status: true, message: "Успешно защищено" };
+    } catch (e: unknown) {
+      if (
+        !!e &&
+        typeof e === "object" &&
+        "message" in e &&
+        typeof e.message === "string"
+      ) {
+        return { status: false, message: e.message };
+      }
+      return { status: false, message: "Не получилось защитить" };
     }
   },
 }));

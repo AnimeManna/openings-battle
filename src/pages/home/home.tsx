@@ -4,12 +4,16 @@ import { FaVoteYea } from "react-icons/fa";
 import { MdListAlt } from "react-icons/md";
 import { GiTrophyCup } from "react-icons/gi";
 import { usePlaylistStore } from "@/features/playlist/model/store";
+import { HomeInfo } from "@/widgets/home/info/info";
 
 export const HomeComponent: React.FC = () => {
   const nextOpening = usePlaylistStore((state) => state.nextOpening);
 
   return (
     <div className={classess.container}>
+      <div className={classess.tile}>
+        <HomeInfo />
+      </div>
       {nextOpening && (
         <div className={classess.tile}>
           <NavTile

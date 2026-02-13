@@ -6,10 +6,55 @@
   padding: 16px;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: $bg-main;
+  padding: 12px;
+  box-sizing: border-box;
+  top: 0;
+  position: sticky;
+
+  @media (max-width: 1024px) {
+    padding: 4px;
+  }
+}
+
 .title {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 600;
-  text-align: center;
+  flex: 1;
+
+  @media (max-width: 1024px) {
+    font-size: 1rem;
+  }
+}
+
+.column {
+  width: fit-content;
+}
+
+.shields {
+  display: flex;
+  column-gap: 8px;
+  align-items: center;
+  font-size: 2rem;
+
+  @media (max-width: 1024px) {
+    font-size: 1rem;
+  }
+}
+
+.icon {
+  color: $accent-gold;
+}
+
+.article {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
 }
 
 .list {

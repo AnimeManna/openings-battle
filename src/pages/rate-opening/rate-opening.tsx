@@ -12,6 +12,7 @@ import { getVideoEmbedUrl } from "@/shared/helpers/getVideoUrl";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Opening } from "@/entities/openings/types";
 import { usePlaylistStore } from "@/features/playlist/model/store";
+import { useSnackbarStore } from "@/shared/model/snackbar/store";
 
 const variants = {
   enter: (direction: number) => ({
@@ -39,6 +40,8 @@ export const RateOpening: React.FC = () => {
   const { rate, onRate, isProtected, onProtect } = useOpeningVote(
     params.id ?? "",
   );
+
+  const show = useSnackbarStore((state) => state.show);
 
   const navigation: {
     prevId: string | null;
@@ -95,6 +98,7 @@ export const RateOpening: React.FC = () => {
     const numValue = Number(value);
     if (Number.isNaN(numValue)) return;
     onRate(numValue);
+    show("Ваш голос успешно засчитан", "success", 1000);
   };
 
   const youtubeId = getYoutubeId(opening.youtubeUrl);
