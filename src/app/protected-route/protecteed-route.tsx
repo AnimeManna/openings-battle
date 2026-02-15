@@ -1,10 +1,10 @@
-import { useAuthStore } from "@/entities/auth/model";
+import { useAuthStore } from "@/entities/auth/model/store";
 import { Navigate, Outlet } from "react-router";
 
 export const ProtectedRoute = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuth } = useAuthStore();
 
-  if (!isAuthenticated) {
+  if (!isAuth) {
     return <Navigate to="/login" replace />;
   }
 

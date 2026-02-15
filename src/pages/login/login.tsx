@@ -3,14 +3,15 @@ import classes from "./login.module.scss";
 import { Button } from "@/shared/ui/button/button";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useAuthStore } from "@/entities/auth/model";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/shared/firebase";
+import { useAuthStore } from "@/entities/auth/model/store";
 import { Select } from "@/shared/ui/select/select";
+import supabase from "@/shared/supabase";
+
+const EMAIL_SALT = "@gmail.com";
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuthStore();
+  const { isAuth, signIn } = useAuthStore();
 
   const [usersList, setUsersList] = useState<
     { value: string; label: string }[]
@@ -21,19 +22,28 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/");
-  }, [isAuthenticated, navigate]);
+    if (isAuth) navigate("/");
+  }, [isAuth, navigate]);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const snap = await getDocs(collection(db, "users"));
-      const list = snap.docs.map((doc) => ({
-        value: doc.id,
-        label: doc.data().displayName,
-      }));
-      setUsersList(list);
+      const { data, error } = await supabase.from("profiles").select("*");
 
-      setSelectedUser(list[0].value);
+      if (!data || error) {
+        console.error("Error when getting data:", error);
+        return;
+      }
+
+      const formattedList = data
+        .filter((profile) => !profile.is_service_account)
+        .map((profile) => ({
+          label: profile.username ?? "",
+          value: `${profile.username}${EMAIL_SALT}`.toLowerCase(),
+        }));
+
+      setUsersList(formattedList);
+
+      setSelectedUser(formattedList[0].value);
     };
     fetchUsers();
   }, []);
@@ -44,7 +54,7 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     setError("");
 
-    const success = await login(selectedUser, pin);
+    const success = await signIn(selectedUser, pin);
 
     if (success) {
       navigate("/");

@@ -1,29 +1,19 @@
-import { useEffect, useMemo } from "react";
-import { useAdminStatsStore } from "@/features/admin/model";
-import { useOpeningsStore } from "@/entities/openings/model";
+import { useEffect } from "react";
+import { useAdminStatsStore } from "@/features/admin/model/store";
 import classess from "./openings-stats.module.scss";
 
 export const OpeningsStats = () => {
-  const { fetchAdminData, allVotes, allUsers, isLoading } =
-    useAdminStatsStore();
-  const { openings } = useOpeningsStore();
+  const {
+    fetchAdminData,
+    allOpenings: openings,
+    matrix: votesMatrix,
+    allProfiles: allUsers,
+    isLoading,
+  } = useAdminStatsStore();
 
   useEffect(() => {
     fetchAdminData();
   }, []);
-
-  const votesMatrix = useMemo(() => {
-    const matrix: Record<string, Record<string, number>> = {};
-
-    allVotes.forEach((vote) => {
-      if (!matrix[vote.openingId]) {
-        matrix[vote.openingId] = {};
-      }
-      matrix[vote.openingId][vote.userId] = vote.rate;
-    });
-
-    return matrix;
-  }, [allVotes]);
 
   if (isLoading) return <div>Загружаем всю правду о судьях...</div>;
 
@@ -37,9 +27,7 @@ export const OpeningsStats = () => {
 
               {allUsers.map((user) => (
                 <th key={user.id} className={classess.userHeader}>
-                  <div className={classess.verticalText}>
-                    {user.displayName}
-                  </div>
+                  <div className={classess.verticalText}>{user.username}</div>
                 </th>
               ))}
 
@@ -53,7 +41,10 @@ export const OpeningsStats = () => {
                 <td className={classess.stickyCol} title={op.title}>
                   <div className={classess.trackInfo}>
                     <span className={classess.trackName}>{op.title}</span>
-                    <span className={classess.trackAnime}>{op.anime}</span>
+
+                    <span className={classess.trackAnime}>
+                      {op.anime?.title}
+                    </span>
                   </div>
                 </td>
 
@@ -73,9 +64,7 @@ export const OpeningsStats = () => {
                   );
                 })}
 
-                <td className={classess.avgCell}>
-                  {op.stats.avgScore.toFixed(1)}
-                </td>
+                <td className={classess.avgCell}>{op.avgScore.toFixed(1)}</td>
               </tr>
             ))}
           </tbody>

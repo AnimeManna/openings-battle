@@ -1,0 +1,37 @@
+import type { Database } from "@/shared/database.types";
+
+type OpeningRow = Database["public"]["Tables"]["openings"]["Row"];
+type AnimeRow = Database["public"]["Tables"]["anime"]["Row"];
+type ArtistRow = Database["public"]["Tables"]["artists"]["Row"];
+
+export type OpeningDTO = OpeningRow & {
+  anime: AnimeRow | null;
+};
+
+export interface Opening {
+  id: string;
+  title: string;
+  videoUrl: string;
+  openingNum: number;
+  anime: {
+    id: string;
+    title: string;
+  } | null;
+  artists:
+    | {
+        id: string;
+        name: string;
+      }[]
+    | null;
+}
+
+type SortedOpeningRow =
+  Database["public"]["Functions"]["get_sorted_openings"]["Returns"][number];
+
+export type SortedOpeningDTO = Omit<
+  SortedOpeningRow,
+  "anime_data" | "artist"
+> & {
+  anime_data: AnimeRow;
+  artists: ArtistRow[];
+};

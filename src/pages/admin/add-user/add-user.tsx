@@ -1,19 +1,20 @@
 import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
 import classes from "./add-user.module.scss";
 import { TextField } from "@/shared/ui/text-field/textfield";
 import { Button } from "@/shared/ui/button/button";
-import type { Role, User } from "@/entities/auth/types";
-import { roles } from "@/entities/auth/const";
+import { roles } from "@/entities/auth/model/const";
 import { Select } from "@/shared/ui/select/select";
-import { db } from "@/shared/firebase";
-import { APP_CONFIG } from "@/shared/config";
+import type { Role } from "@/entities/auth/model/types";
+import { useAuthStore } from "@/entities/auth/model/store";
 
 export const AddUserPage: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
   const [login, setLogin] = useState<string>("");
-  const [pin, setPin] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<Role>(roles.player as Role);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const addUser = useAuthStore((state) => state.signUp);
 
   const rolesOptions = [
     { value: roles.player, label: "Игрок (Player)" },
@@ -23,19 +24,11 @@ export const AddUserPage: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const user: User = {
-        id: login,
-        displayName: login,
-        pin,
-        role,
-        protectionBudget: APP_CONFIG.DEFAULT_PROTECTION_BUDGET,
-        protectionUsed: 0,
-      };
-      await setDoc(doc(db, "users", login), user);
-
+      await addUser(email, password, login, role);
       setStatus("success");
+      setEmail("");
       setLogin("");
-      setPin("");
+      setPassword("");
       setRole(roles.player as Role);
     } catch (e) {
       console.error(e);
@@ -49,16 +42,22 @@ export const AddUserPage: React.FC = () => {
 
       <div className={classes.form}>
         <TextField
+          label="Email"
+          placeholder="test@gmail.com"
+          value={email}
+          onChange={(e) => setEmail(e.currentTarget.value)}
+        />
+        <TextField
           label="Логин"
           placeholder="Игрок"
           value={login}
           onChange={(e) => setLogin(e.currentTarget.value)}
         />
         <TextField
-          label="Пин-код"
+          label="Пароль"
           placeholder="1234"
-          value={pin}
-          onChange={(e) => setPin(e.currentTarget.value)}
+          value={password}
+          onChange={(e) => setPassword(e.currentTarget.value)}
         />
         <Select
           label="Роль"

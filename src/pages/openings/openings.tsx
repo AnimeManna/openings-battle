@@ -1,23 +1,48 @@
 import classess from "./openings.module.scss";
 import { OpeningRow } from "@/features/opening/opening-row/opening-row";
 import { OpeningListPreview } from "@/features/opening/opening-list-preview/opening-list-preview";
-import { usePlaylistStore } from "@/features/playlist/model/store";
-import { useAuthStore } from "@/entities/auth/model";
-
-import { RiShieldStarFill } from "react-icons/ri";
-import { Tooltip } from "@/shared/ui/tooltip/tooltip";
+import { useOpeningsStore } from "@/entities/openings/model/store";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useEffect, useRef } from "react";
 
 export const Openings: React.FC = () => {
-  const openings = usePlaylistStore((state) => state.playlist);
+  const { openings, fetchSortedOpenings, page, isLoading } = useOpeningsStore();
 
-  const user = useAuthStore((state) => state.user);
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: openings.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 500,
+    overscan: 5,
+    useFlushSync: true,
+  });
+
+  useEffect(() => {
+    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+    if (!lastItem) return;
+
+    if (
+      lastItem.index >= openings.length - 1 &&
+      !isLoading &&
+      openings.length > 0
+    ) {
+      fetchSortedOpenings(page + 1);
+    }
+  }, [
+    rowVirtualizer.getVirtualItems(),
+    openings.length,
+    isLoading,
+    fetchSortedOpenings,
+    page,
+  ]);
 
   return (
     <div className={classess.container}>
       <div className={classess.header}>
         <p className={classess.title}>Ваши оценки</p>
         <div className={classess.column}>
-          {user && (
+          {/* {user && (
             <Tooltip
               position="left"
               label="Щиты позволяют перенести опенинг сразу в турнирую таблицу"
@@ -25,24 +50,44 @@ export const Openings: React.FC = () => {
               <div className={classess.shields}>
                 <RiShieldStarFill className={classess.icon} />
                 <div className={classess.article}>
-                  <p>{user.protectionUsed}</p>
+                  <p>{protectedCount}</p>
                   <p>/</p>
-                  <p>{user.protectionBudget}</p>
+                  <p>{APP_CONFIG.MAX}</p>
                 </div>
               </div>
             </Tooltip>
-          )}
+          )} */}
         </div>
       </div>
-      <ul className={classess.list}>
-        {openings.map((opening) => (
-          <li key={opening.id}>
-            <OpeningRow opening={opening}>
-              <OpeningListPreview opening={opening} />
-            </OpeningRow>
-          </li>
-        ))}
-      </ul>
+      <div className={classess.wrapper} ref={parentRef}>
+        <ul
+          className={classess.list}
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const opening = openings[virtualRow.index];
+            if (!opening) return null;
+
+            return (
+              <li
+                key={virtualRow.key}
+                data-index={virtualRow.index}
+                ref={rowVirtualizer.measureElement}
+                className={classess.item}
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <OpeningRow opening={opening}>
+                  <OpeningListPreview opening={opening} />
+                </OpeningRow>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };

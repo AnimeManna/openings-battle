@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
 import classes from "./add-opening.module.scss";
 import { TextField } from "@/shared/ui/text-field/textfield";
 import { Button } from "@/shared/ui/button/button";
-import { db } from "@/shared/firebase";
-import type { Opening } from "@/entities/openings/types";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
 
 export const AddOpeningPage = () => {
@@ -22,22 +19,21 @@ export const AddOpeningPage = () => {
     }
 
     try {
-      const opening: Opening = {
-        id: id,
-        youtubeUrl: url,
-        startTime: Number(startTime),
-        orderNumber: Number(orderNumber),
-        title: title,
-        anime: anime,
-        createdAt: Date.now().toString(),
-        isProtected: false,
-        stats: {
-          scoreSum: 0,
-          votesCount: 0,
-          avgScore: 0,
-        },
-      };
-      await setDoc(doc(db, "openings", id), opening);
+      // const opening: Opening = {
+      //   id: id,
+      //   youtubeUrl: url,
+      //   startTime: Number(startTime),
+      //   orderNumber: Number(orderNumber),
+      //   title: title,
+      //   anime: anime,
+      //   createdAt: Date.now().toString(),
+      //   isProtected: false,
+      //   stats: {
+      //     scoreSum: 0,
+      //     votesCount: 0,
+      //     avgScore: 0,
+      //   },
+      // };
 
       setUrl("");
       setTitle("");

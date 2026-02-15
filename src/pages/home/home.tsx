@@ -3,11 +3,19 @@ import classess from "./home.module.scss";
 import { FaVoteYea } from "react-icons/fa";
 import { MdListAlt } from "react-icons/md";
 import { GiTrophyCup } from "react-icons/gi";
-import { usePlaylistStore } from "@/features/playlist/model/store";
 import { HomeInfo } from "@/widgets/home/info/info";
+import { useVotesStore } from "@/entities/votes/model/store";
+import { useMemo } from "react";
+import { useOpeningsStore } from "@/entities/openings/model/store";
 
 export const HomeComponent: React.FC = () => {
-  const nextOpening = usePlaylistStore((state) => state.nextOpening);
+  const openings = useOpeningsStore((state) => state.openings);
+  const votes = useVotesStore((state) => state.votesMap);
+
+  const nextOpening = useMemo(
+    () => openings.find((opening) => !votes.get(opening.id)),
+    [openings, votes],
+  );
 
   return (
     <div className={classess.container}>
@@ -27,7 +35,7 @@ export const HomeComponent: React.FC = () => {
         <NavTile icon={<MdListAlt />} label="Мой список" to="/openings" />
       </div>
       <div className={classess.tile}>
-        <NavTile icon={<GiTrophyCup />} label="Тир лист" to="/openings" />
+        <NavTile icon={<GiTrophyCup />} label="Статистика" to="/statistics" />
       </div>
     </div>
   );

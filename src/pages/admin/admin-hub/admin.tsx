@@ -5,11 +5,11 @@ import { MdGroupAdd } from "react-icons/md";
 import { AiOutlineVideoCameraAdd } from "react-icons/ai";
 import { GiTrophyCup } from "react-icons/gi";
 import { Navigate } from "react-router";
-import { useAuthStore } from "@/entities/auth/model";
+import { useAuthStore } from "@/entities/auth/model/store";
 import { isAdmin } from "@/shared/helpers/isAdmin";
 
 export const AdminPage: React.FC = () => {
-  const user = useAuthStore((state) => state.user);
+  const profile = useAuthStore((state) => state.profile);
   interface NavigationButton {
     icon: IconType;
     label: string;
@@ -34,7 +34,7 @@ export const AdminPage: React.FC = () => {
     },
   ];
 
-  if (!isAdmin(user?.role ?? "player")) return <Navigate to="/" />;
+  if (!isAdmin(profile?.role ?? "player")) return <Navigate to="/" />;
 
   return (
     <div className={classess.container}>

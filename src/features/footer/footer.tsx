@@ -4,7 +4,7 @@ import classess from "./footer.module.scss";
 import { IconButton } from "@/shared/ui/icon-button/icon-button";
 import { useNavigate } from "react-router";
 import { Tooltip } from "@/shared/ui/tooltip/tooltip";
-import { useAuthStore } from "@/entities/auth/model";
+import { useAuthStore } from "@/entities/auth/model/store";
 import { isAdmin } from "@/shared/helpers/isAdmin";
 import type { NavigationButton } from "@/shared/types/nav";
 import { GoSignOut } from "react-icons/go";
@@ -12,7 +12,7 @@ import { GoSignOut } from "react-icons/go";
 export const MainFooter: React.FC = () => {
   const navigate = useNavigate();
 
-  const { user, logout } = useAuthStore();
+  const { profile, signOut } = useAuthStore();
 
   const navButtons: NavigationButton[] = [
     {
@@ -29,7 +29,7 @@ export const MainFooter: React.FC = () => {
   return (
     <div className={classess.container}>
       <div className={classess.left}>
-        {user && isAdmin(user.role) && (
+        {profile && profile.role && isAdmin(profile.role) && (
           <div
             className={classess.item}
             onClick={() => {
@@ -62,7 +62,7 @@ export const MainFooter: React.FC = () => {
         <div
           className={classess.item}
           onClick={() => {
-            logout();
+            signOut();
           }}
         >
           <Tooltip label="Выйти">

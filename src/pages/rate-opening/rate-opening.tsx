@@ -4,15 +4,15 @@ import { useMemo, useState } from "react";
 import { APP_CONFIG } from "@/shared/config";
 import { RateButton } from "@/shared/ui/rate-button/rate-button";
 import { ShieldButton } from "@/features/opening/shield-button/shield-button";
-import { useOpeningVote } from "@/entities/votes/useOpeningVote";
+import { useOpeningVote } from "@/entities/votes/hooks/useOpeningVote";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
 import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
 import { useSwipeable } from "react-swipeable";
 import { getVideoEmbedUrl } from "@/shared/helpers/getVideoUrl";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Opening } from "@/entities/openings/types";
-import { usePlaylistStore } from "@/features/playlist/model/store";
+import type { Opening } from "@/entities/openings/model/types";
 import { useSnackbarStore } from "@/shared/model/snackbar/store";
+import { useOpeningsStore } from "@/entities/openings/model/store";
 
 const variants = {
   enter: (direction: number) => ({
@@ -35,7 +35,7 @@ export const RateOpening: React.FC = () => {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const openings = usePlaylistStore((state) => state.playlist);
+  const { openings } = useOpeningsStore();
 
   const { rate, onRate, isProtected, onProtect } = useOpeningVote(
     params.id ?? "",
@@ -47,15 +47,16 @@ export const RateOpening: React.FC = () => {
     prevId: string | null;
     nextId: string | null;
     opening: Opening | null;
+    currentIndex: number | null;
   } = useMemo(() => {
     if (!params.id || openings.length === 0) {
-      return { prevId: null, nextId: null, opening: null };
+      return { prevId: null, nextId: null, opening: null, currentIndex: null };
     }
 
     const currentIndex = openings.findIndex((op) => op.id === params.id);
 
     if (currentIndex === -1)
-      return { prevId: null, nextId: null, opening: null };
+      return { prevId: null, nextId: null, opening: null, currentIndex };
 
     return {
       prevId: currentIndex > 0 ? openings[currentIndex - 1].id : null,
@@ -64,10 +65,23 @@ export const RateOpening: React.FC = () => {
           ? openings[currentIndex + 1].id
           : null,
       opening: openings[currentIndex],
+      currentIndex,
     };
   }, [openings, params.id]);
 
   const { opening, prevId, nextId } = navigation;
+
+  // const DEFAULT_TRESHHOLD = 5;
+
+  // useEffect(() => {
+  //   if (
+  //     currentIndex &&
+  //     openings.length - currentIndex <= DEFAULT_TRESHHOLD &&
+  //     !isLoading
+  //   ) {
+  //     fetchSortedOpenings(page + 1);
+  //   }
+  // }, [currentIndex, isLoading, page, fetchSortedOpenings, openings]);
 
   const [direction, setDirection] = useState(0);
 
@@ -85,9 +99,23 @@ export const RateOpening: React.FC = () => {
     }
   };
 
+  const slideToPrevious = () => {
+    if (prevId) {
+      navigate(`/openings/${prevId}`);
+      setDirection(1);
+    }
+  };
+
+  const slideToNext = () => {
+    if (nextId) {
+      navigate(`/openings/${nextId}`);
+      setDirection(-1);
+    }
+  };
+
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: navigateToPrevious,
-    onSwipedRight: navigateToNext,
+    onSwipedLeft: slideToPrevious,
+    onSwipedRight: slideToNext,
   });
 
   if (!opening) {
@@ -101,7 +129,11 @@ export const RateOpening: React.FC = () => {
     show("Ваш голос успешно засчитан", "success", 1000);
   };
 
-  const youtubeId = getYoutubeId(opening.youtubeUrl);
+  const youtubeId = getYoutubeId(opening.videoUrl);
+
+  const scoreArray = Array.from({ length: APP_CONFIG.MAX_SCORE }).map(
+    (_, index) => index + 1,
+  );
 
   return (
     <div className={classess.container} {...swipeHandlers}>
@@ -136,26 +168,24 @@ export const RateOpening: React.FC = () => {
 
             <div className={classess.infoGrid}>
               <div className={classess.label}>Аниме</div>
-              <div className={classess.value}>{opening.anime}</div>
+              <div className={classess.value}>{opening.anime?.title}</div>
 
               <div className={classess.label}>Номер Опенинга</div>
-              <div className={classess.value}>{opening.orderNumber}</div>
+              <div className={classess.value}>{opening.openingNum}</div>
             </div>
 
             <div className={classess.rating}>
               <ul className={classess.list}>
-                {Array.from({ length: APP_CONFIG.MAX_SCORE })
-                  .map((_, index) => index + 1)
-                  .map((rating) => (
-                    <li key={rating}>
-                      <RateButton
-                        value={rating}
-                        onClick={rateOpening}
-                        isActive={rate === rating}
-                        size="xl"
-                      />
-                    </li>
-                  ))}
+                {scoreArray.map((rating) => (
+                  <li key={rating}>
+                    <RateButton
+                      value={rating}
+                      onClick={rateOpening}
+                      isActive={rate === rating}
+                      size="xl"
+                    />
+                  </li>
+                ))}
               </ul>
             </div>
             <ShieldButton isActive={isProtected} onClick={onProtect} />

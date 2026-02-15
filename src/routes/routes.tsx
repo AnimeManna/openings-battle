@@ -10,6 +10,7 @@ import { Openings } from "@/pages/openings/openings";
 import { RateOpening } from "@/pages/rate-opening/rate-opening";
 import { NotFoundPage } from "@/pages/not-found/not-found";
 import { OpeningsStats } from "@/pages/admin/openings-stats/openings-stats";
+import { StatisticsPage } from "@/pages/statistics/statistics";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "*", element: <NotFoundPage /> },
           { index: true, element: <HomeComponent /> },
+          { path: "/statistics", element: <StatisticsPage /> },
           {
             path: "openings",
             children: [
