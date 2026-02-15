@@ -3,10 +3,10 @@ import { OpeningRow } from "@/features/opening/opening-row/opening-row";
 import { OpeningListPreview } from "@/features/opening/opening-list-preview/opening-list-preview";
 import { useOpeningsStore } from "@/entities/openings/model/store";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export const Openings: React.FC = () => {
-  const { openings, fetchSortedOpenings, page, isLoading } = useOpeningsStore();
+  const { openings } = useOpeningsStore();
 
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -18,24 +18,24 @@ export const Openings: React.FC = () => {
     useFlushSync: true,
   });
 
-  useEffect(() => {
-    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
-    if (!lastItem) return;
+  // useEffect(() => {
+  //   const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+  //   if (!lastItem) return;
 
-    if (
-      lastItem.index >= openings.length - 1 &&
-      !isLoading &&
-      openings.length > 0
-    ) {
-      fetchSortedOpenings(page + 1);
-    }
-  }, [
-    rowVirtualizer.getVirtualItems(),
-    openings.length,
-    isLoading,
-    fetchSortedOpenings,
-    page,
-  ]);
+  //   if (
+  //     lastItem.index >= openings.length - 1 &&
+  //     !isLoading &&
+  //     openings.length > 0
+  //   ) {
+  //     fetchSortedOpenings(page + 1);
+  //   }
+  // }, [
+  //   rowVirtualizer.getVirtualItems(),
+  //   openings.length,
+  //   isLoading,
+  //   fetchSortedOpenings,
+  //   page,
+  // ]);
 
   return (
     <div className={classess.container}>
