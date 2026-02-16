@@ -1,7 +1,7 @@
+import type { AnimeRow } from "@/entities/anime/model/types";
 import type { Database } from "@/shared/database.types";
 
 type OpeningRow = Database["public"]["Tables"]["openings"]["Row"];
-type AnimeRow = Database["public"]["Tables"]["anime"]["Row"];
 type ArtistRow = Database["public"]["Tables"]["artists"]["Row"];
 
 export type OpeningDTO = OpeningRow & {

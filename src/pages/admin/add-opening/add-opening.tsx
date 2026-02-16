@@ -1,40 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import classes from "./add-opening.module.scss";
 import { TextField } from "@/shared/ui/text-field/textfield";
 import { Button } from "@/shared/ui/button/button";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
 import { AutoComplete } from "@/shared/ui/autocomplete/autocomplete";
-import { useDebounce } from "@/shared/hooks/useDebounce";
-import type { Option } from "@/shared/types/select";
-import supabase from "@/shared/supabase";
+import { useFilteredAnime } from "@/entities/anime/hooks/useFilteredAnime";
+import { useFilteredArtists } from "@/entities/artist/hooks/useFilteredArtists";
 
 export const AddOpeningPage = () => {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
-  const [anime, setAnime] = useState("");
   const [orderNumber, setOrderNumber] = useState<number | string>(1);
+  const [seasonNumber, setSeasonNumber] = useState<number | string>(1);
 
-  const debouncedAnime = useDebounce(anime, 500);
+  const { animeSearch, setAnimeSearch, filteredAnimeOptions } =
+    useFilteredAnime();
 
-  const [animeOptions] = useState<Option[]>([]);
-
-  const fetchAnime = async (search: string) => {
-    if (!search.length) return;
-    try {
-      const { data } = await supabase
-        .from("anime")
-        .select("*")
-        .eq("english_title", search);
-
-      console.log(data);
-    } catch (error) {
-      console.error("Ошибка при получении аниме", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAnime(debouncedAnime);
-  }, [debouncedAnime]);
+  const { artistSearch, setArtistSearch, filtereArtistsOptions } =
+    useFilteredArtists();
 
   const handleSave = async () => {
     const id = getYoutubeId(url);
@@ -44,25 +27,10 @@ export const AddOpeningPage = () => {
     }
 
     try {
-      // const opening: Opening = {
-      //   id: id,
-      //   youtubeUrl: url,
-      //   startTime: Number(startTime),
-      //   orderNumber: Number(orderNumber),
-      //   title: title,
-      //   anime: anime,
-      //   createdAt: Date.now().toString(),
-      //   isProtected: false,
-      //   stats: {
-      //     scoreSum: 0,
-      //     votesCount: 0,
-      //     avgScore: 0,
-      //   },
-      // };
-
       setUrl("");
       setTitle("");
-      setAnime("");
+      setAnimeSearch("");
+      setArtistSearch("");
       setOrderNumber(1);
     } catch (e) {
       console.error(e);
@@ -72,7 +40,6 @@ export const AddOpeningPage = () => {
   return (
     <div className={classes.container}>
       <p className={classes.title}>Добавить Опенинг</p>
-
       <div className={classes.form}>
         <TextField
           label="Ссылка"
@@ -94,6 +61,28 @@ export const AddOpeningPage = () => {
           </div>
         )}
 
+        <AutoComplete
+          label="Название аниме"
+          placeholder="Chainsaw Man"
+          value={animeSearch}
+          onChange={(e) => setAnimeSearch(e.currentTarget.value)}
+          options={filteredAnimeOptions}
+        />
+
+        <TextField
+          label="Номер сезона"
+          placeholder="1,2,3..."
+          value={seasonNumber}
+          onChange={(e) => setSeasonNumber(e.currentTarget.value)}
+        />
+
+        <TextField
+          label="Номер опенинга"
+          placeholder="1,2,3..."
+          value={orderNumber}
+          onChange={(e) => setOrderNumber(e.currentTarget.value)}
+        />
+
         <TextField
           label="Название трека"
           placeholder="KICK BACK"
@@ -102,18 +91,11 @@ export const AddOpeningPage = () => {
         />
 
         <AutoComplete
-          label="Название аниме"
-          placeholder="Chainsaw Man"
-          value={anime}
-          onChange={(e) => setAnime(e.currentTarget.value)}
-          options={!debouncedAnime.trim() ? [] : animeOptions}
-        />
-
-        <TextField
-          label="Номер опенинга"
-          placeholder="1,2,3..."
-          value={orderNumber}
-          onChange={(e) => setOrderNumber(e.currentTarget.value)}
+          label="Исполните(ль/ли)"
+          placeholder="Yui"
+          value={artistSearch}
+          onChange={(e) => setArtistSearch(e.currentTarget.value)}
+          options={filtereArtistsOptions}
         />
 
         <Button onClick={handleSave}>Сохранить в Базу</Button>
