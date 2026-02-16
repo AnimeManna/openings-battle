@@ -1,0 +1,145 @@
+.container {
+  --local-border-color: #{$border-color};
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  position: relative;
+
+  &:focus-within {
+    --local-border-color: #{$accent-primary};
+  }
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $text-muted;
+  margin-left: 4px;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  background-color: $bg-surface;
+  border: 1px solid var(--local-border-color);
+  border-radius: $radius-md;
+  padding: 12px 16px;
+
+  font-family: inherit;
+  font-size: 14px;
+  color: $text-main;
+
+  transition: all 0.2s ease-in-out;
+  outline: none;
+
+  &::placeholder {
+    color: darken($text-muted, 10%);
+  }
+
+  &:focus {
+    --local-border-color: #{$accent-primary};
+    box-shadow: 0 0 0 3px rgba($accent-primary, 0.15);
+    background-color: lighten($bg-surface, 2%);
+  }
+
+  &.hasError {
+    border-color: $accent-danger;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($accent-danger, 0.15);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: darken($bg-surface, 5%);
+  }
+}
+
+.active {
+  .input {
+    border-radius: $radius-md $radius-md 0 0;
+  }
+}
+
+.error {
+  font-size: 11px;
+  color: $accent-danger;
+  margin-left: 4px;
+  margin-top: 2px;
+  animation: slideDown 0.2s ease-out;
+}
+
+.options {
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  background-color: $bg-surface;
+  overflow-y: auto;
+  max-height: 300px;
+  border: 1px solid var(--local-border-color);
+  border-top: none;
+  z-index: 100;
+
+  border-radius: 0 0 $radius-md $radius-md;
+
+  transform-origin: top center;
+  animation: appear 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  box-shadow: 0 2px 2px 1px var(--local-border-color);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  width: 100%;
+}
+
+.item {
+  width: 100%;
+  padding: 4px;
+  cursor: pointer;
+
+  transition: all 0.1s ease-in-out;
+
+  &:hover:not(:disabled) {
+    background-color: rgba($accent-primary, 0.1);
+    box-shadow: 0 4px 12px rgba($accent-primary, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.99);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

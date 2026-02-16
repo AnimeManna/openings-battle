@@ -57,7 +57,6 @@ export const useAdminStatsStore = create<AdminStatsState>((set) => ({
           }
 
           if (!allProfiles[vote.user_id.id]) {
-            console.log(vote);
             allProfiles[vote.user_id.id] =
               typeof vote.user_id === "object" ? vote.user_id : ({} as Profile);
           }

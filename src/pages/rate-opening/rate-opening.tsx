@@ -99,23 +99,9 @@ export const RateOpening: React.FC = () => {
     }
   };
 
-  const slideToPrevious = () => {
-    if (prevId) {
-      navigate(`/openings/${prevId}`);
-      setDirection(1);
-    }
-  };
-
-  const slideToNext = () => {
-    if (nextId) {
-      navigate(`/openings/${nextId}`);
-      setDirection(-1);
-    }
-  };
-
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: slideToPrevious,
-    onSwipedRight: slideToNext,
+    onSwipedLeft: navigateToNext,
+    onSwipedRight: navigateToPrevious,
   });
 
   if (!opening) {

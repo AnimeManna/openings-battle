@@ -1,15 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "./add-opening.module.scss";
 import { TextField } from "@/shared/ui/text-field/textfield";
 import { Button } from "@/shared/ui/button/button";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
+import { AutoComplete } from "@/shared/ui/autocomplete/autocomplete";
+import { useDebounce } from "@/shared/hooks/useDebounce";
+import type { Option } from "@/shared/types/select";
+import supabase from "@/shared/supabase";
 
 export const AddOpeningPage = () => {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [anime, setAnime] = useState("");
-  const [startTime, setStartTime] = useState<number | string>(0);
   const [orderNumber, setOrderNumber] = useState<number | string>(1);
+
+  const debouncedAnime = useDebounce(anime, 500);
+
+  const [animeOptions, setAnimeOptions] = useState<Option[]>([]);
+
+  const fetchAnime = async (search: string) => {
+    if (!search.length) return;
+    try {
+      const { data } = await supabase
+        .from("anime")
+        .select("*")
+        .eq("english_title", search);
+
+      console.log(data);
+    } catch (error) {
+      console.error("Ошибка при получении аниме", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAnime(debouncedAnime);
+  }, [debouncedAnime]);
 
   const handleSave = async () => {
     const id = getYoutubeId(url);
@@ -39,7 +64,6 @@ export const AddOpeningPage = () => {
       setTitle("");
       setAnime("");
       setOrderNumber(1);
-      setStartTime(0);
     } catch (e) {
       console.error(e);
     }
@@ -77,11 +101,12 @@ export const AddOpeningPage = () => {
           onChange={(e) => setTitle(e.currentTarget.value)}
         />
 
-        <TextField
+        <AutoComplete
           label="Название аниме"
           placeholder="Chainsaw Man"
           value={anime}
           onChange={(e) => setAnime(e.currentTarget.value)}
+          options={!debouncedAnime.trim() ? [] : animeOptions}
         />
 
         <TextField
@@ -89,12 +114,6 @@ export const AddOpeningPage = () => {
           placeholder="1,2,3..."
           value={orderNumber}
           onChange={(e) => setOrderNumber(e.currentTarget.value)}
-        />
-
-        <TextField
-          label="Старт (секунды)"
-          value={startTime}
-          onChange={(e) => setStartTime(e.currentTarget.value)}
         />
 
         <Button onClick={handleSave}>Сохранить в Базу</Button>

@@ -22,7 +22,7 @@ export const OpeningsStats = () => {
       <div className={classess.tableWrapper}>
         <table className={classess.table}>
           <thead>
-            <tr>
+            <tr className={classess.userRow}>
               <th className={classess.stickyCol}>Track / User</th>
 
               {allUsers.map((user) => (
