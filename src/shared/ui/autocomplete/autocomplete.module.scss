@@ -122,6 +122,19 @@
   }
 }
 
+.noOptions {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+}
+
+.empty {
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 @keyframes appear {
   from {
     opacity: 0;

@@ -3,35 +3,49 @@ import classes from "./add-opening.module.scss";
 import { TextField } from "@/shared/ui/text-field/textfield";
 import { Button } from "@/shared/ui/button/button";
 import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
-import { AutoComplete } from "@/shared/ui/autocomplete/autocomplete";
-import { useFilteredAnime } from "@/entities/anime/hooks/useFilteredAnime";
-import { useFilteredArtists } from "@/entities/artist/hooks/useFilteredArtists";
+import { AnimeSelector } from "@/widgets/anime/anime-selector/anime-selector";
+import { ArtistSelector } from "@/widgets/artist/artist-selector/artist-selector";
+import { useOpeningsStore } from "@/entities/openings/model/store";
 
 export const AddOpeningPage = () => {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
-  const [orderNumber, setOrderNumber] = useState<number | string>(1);
+  const [openingNumber, setOpeningNumber] = useState<number | string>(1);
   const [seasonNumber, setSeasonNumber] = useState<number | string>(1);
 
-  const { animeSearch, setAnimeSearch, filteredAnimeOptions } =
-    useFilteredAnime();
+  const [animeId, setAnimeId] = useState<string | null>(null);
+  const [artistIds, setArtistIds] = useState<string[] | null>(null);
 
-  const { artistSearch, setArtistSearch, filtereArtistsOptions } =
-    useFilteredArtists();
+  const { addOpening } = useOpeningsStore();
 
   const handleSave = async () => {
-    const id = getYoutubeId(url);
-    if (!id || !title) {
-      alert("Нужна ссылка и название!");
+    if (!url || !title || !animeId) {
+      console.error("Нужна ссылка и название!");
       return;
     }
 
+    const formattedOpeningNumber = Number(openingNumber);
+    if (Number.isNaN(formattedOpeningNumber)) return;
+
+    const formatedSeasonNumber = Number(seasonNumber);
+    if (Number.isNaN(formatedSeasonNumber)) return;
+    if (!artistIds || (artistIds && artistIds.length === 0)) return;
+
     try {
+      await addOpening({
+        url,
+        title,
+        animeId,
+        openingNum: formattedOpeningNumber,
+        seasonNum: formatedSeasonNumber,
+        artistIds,
+      });
+
       setUrl("");
       setTitle("");
-      setAnimeSearch("");
-      setArtistSearch("");
-      setOrderNumber(1);
+      setOpeningNumber(1);
+      setAnimeId(null);
+      setArtistIds(null);
     } catch (e) {
       console.error(e);
     }
@@ -61,13 +75,7 @@ export const AddOpeningPage = () => {
           </div>
         )}
 
-        <AutoComplete
-          label="Название аниме"
-          placeholder="Chainsaw Man"
-          value={animeSearch}
-          onChange={(e) => setAnimeSearch(e.currentTarget.value)}
-          options={filteredAnimeOptions}
-        />
+        <AnimeSelector onSelect={(id) => setAnimeId(id)} />
 
         <TextField
           label="Номер сезона"
@@ -79,8 +87,8 @@ export const AddOpeningPage = () => {
         <TextField
           label="Номер опенинга"
           placeholder="1,2,3..."
-          value={orderNumber}
-          onChange={(e) => setOrderNumber(e.currentTarget.value)}
+          value={openingNumber}
+          onChange={(e) => setOpeningNumber(e.currentTarget.value)}
         />
 
         <TextField
@@ -90,13 +98,7 @@ export const AddOpeningPage = () => {
           onChange={(e) => setTitle(e.currentTarget.value)}
         />
 
-        <AutoComplete
-          label="Исполните(ль/ли)"
-          placeholder="Yui"
-          value={artistSearch}
-          onChange={(e) => setArtistSearch(e.currentTarget.value)}
-          options={filtereArtistsOptions}
-        />
+        <ArtistSelector onSelect={setArtistIds} />
 
         <Button onClick={handleSave}>Сохранить в Базу</Button>
       </div>

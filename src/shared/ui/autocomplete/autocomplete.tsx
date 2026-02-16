@@ -11,7 +11,9 @@ interface AutoCompleteProps extends Omit<
   error?: string;
   options: Option[];
 
-  onSelect?: (value: string) => void;
+  noOptionsContent?: React.ReactNode;
+
+  onSelect?: (value: string, label: string) => void;
 }
 
 export const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
@@ -20,15 +22,15 @@ export const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
 
     const [isFocused, setIsFocused] = useState(false);
 
-    const selectHandler = (value: string) => {
+    const selectHandler = (value: string, label: string) => {
       if (!onSelect) return;
-      onSelect(value);
+      onSelect(value, label);
       setIsFocused(false);
     };
 
     const isOpenDropdown = useMemo(
-      () => isFocused && value && options.length > 0,
-      [value, options, isFocused],
+      () => isFocused && value,
+      [value, isFocused],
     );
 
     const focusHandler = () => {
@@ -62,23 +64,31 @@ export const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
         </div>
 
         {error && <p className={classess.error}>{error}</p>}
-        {isOpenDropdown ? (
+        {isOpenDropdown && (
           <div className={classess.options}>
-            <ul className={classess.list}>
-              {options.map((option) => (
-                <li
-                  key={option.value}
-                  className={classess.item}
-                  onClick={() => {
-                    selectHandler(option.value);
-                  }}
-                >
-                  {option.label}
-                </li>
-              ))}
-            </ul>
+            {options.length > 0 ? (
+              <ul className={classess.list}>
+                {options.map((option) => (
+                  <li
+                    key={option.value}
+                    className={classess.item}
+                    onClick={() => {
+                      selectHandler(option.value, option.label);
+                    }}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className={classess.noOptions}>
+                {props.noOptionsContent || (
+                  <div className={classess.empty}>Ничего не найдено</div>
+                )}
+              </div>
+            )}
           </div>
-        ) : null}
+        )}
       </div>
     );
   },

@@ -39,7 +39,7 @@ export const AdminPage: React.FC = () => {
   return (
     <div className={classess.container}>
       {navLinks.map((navLink) => (
-        <div className={classess.tile}>
+        <div className={classess.tile} key={navLink.label}>
           <NavTile
             variant="secondary"
             to={navLink.link}

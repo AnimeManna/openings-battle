@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+
+  flex-direction: column;
+}
+
+.form {
+  width: 100%;
+  gap: 8px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 8px;
+
+  width: 100%;
+}

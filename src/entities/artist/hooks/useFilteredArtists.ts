@@ -15,8 +15,7 @@ export const useFilteredArtists = () => {
   const [artistSearch, setArtistSearch] = useState<string>("");
 
   const fuse = useMemo(() => {
-    const list = Array.from(artistMap.values());
-    return new Fuse(list, {
+    return new Fuse(Array.from(artistMap.values()), {
       keys: [{ name: "name", weight: 1 }],
       threshold: 0.3,
       ignoreLocation: true,
