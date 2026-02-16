@@ -16,7 +16,7 @@ export const AddOpeningPage = () => {
 
   const debouncedAnime = useDebounce(anime, 500);
 
-  const [animeOptions, setAnimeOptions] = useState<Option[]>([]);
+  const [animeOptions] = useState<Option[]>([]);
 
   const fetchAnime = async (search: string) => {
     if (!search.length) return;
