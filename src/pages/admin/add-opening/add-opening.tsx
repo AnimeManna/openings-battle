@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import classes from "./add-opening.module.scss";
 import { TextField } from "@/shared/ui/text-field/textfield";
 import { Button } from "@/shared/ui/button/button";
-import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
-import { AnimeSelector } from "@/widgets/anime/anime-selector/anime-selector";
-import { ArtistSelector } from "@/widgets/artist/artist-selector/artist-selector";
+import {
+  AnimeSelector,
+  type AnimeSelectorHandle,
+} from "@/widgets/anime/anime-selector/anime-selector";
+import {
+  ArtistSelector,
+  type ArtistSelectorHandle,
+} from "@/widgets/artist/artist-selector/artist-selector";
 import { useOpeningsStore } from "@/entities/openings/model/store";
+import ReactPlayer from "react-player";
 
 export const AddOpeningPage = () => {
   const [url, setUrl] = useState("");
@@ -17,6 +23,9 @@ export const AddOpeningPage = () => {
   const [artistIds, setArtistIds] = useState<string[] | null>(null);
 
   const { addOpening } = useOpeningsStore();
+
+  const artistSelectorRef = useRef<ArtistSelectorHandle>(null);
+  const animeSelectorRef = useRef<AnimeSelectorHandle>(null);
 
   const handleSave = async () => {
     if (!url || !title || !animeId) {
@@ -46,6 +55,8 @@ export const AddOpeningPage = () => {
       setOpeningNumber(1);
       setAnimeId(null);
       setArtistIds(null);
+      artistSelectorRef.current?.reset();
+      animeSelectorRef.current?.reset();
     } catch (e) {
       console.error(e);
     }
@@ -62,20 +73,16 @@ export const AddOpeningPage = () => {
           onChange={(e) => setUrl(e.currentTarget.value)}
         />
 
-        {getYoutubeId(url) && (
+        {url && (
           <div className={classes.preview}>
-            <iframe
-              width="100%"
-              height="200"
-              src={`https://www.youtube.com/embed/${getYoutubeId(url)}`}
-              title="Preview"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <ReactPlayer width="100%" height="100%" src={url} />
           </div>
         )}
 
-        <AnimeSelector onSelect={(id) => setAnimeId(id)} />
+        <AnimeSelector
+          ref={animeSelectorRef}
+          onSelect={(id) => setAnimeId(id)}
+        />
 
         <TextField
           label="Номер сезона"
@@ -98,7 +105,7 @@ export const AddOpeningPage = () => {
           onChange={(e) => setTitle(e.currentTarget.value)}
         />
 
-        <ArtistSelector onSelect={setArtistIds} />
+        <ArtistSelector ref={artistSelectorRef} onSelect={setArtistIds} />
 
         <Button onClick={handleSave}>Сохранить в Базу</Button>
       </div>

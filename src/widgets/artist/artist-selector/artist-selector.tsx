@@ -1,12 +1,16 @@
 import classess from "./artist-selector.module.scss";
 import { AutoComplete } from "@/shared/ui/autocomplete/autocomplete";
 import { Button } from "@/shared/ui/button/button";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useImperativeHandle, forwardRef } from "react";
 import { Accordion } from "@/shared/ui/accordion/accordion";
 import { useFilteredArtists } from "@/entities/artist/hooks/useFilteredArtists";
 import { AddArtist } from "@/features/artist/add-artits/add-artits";
 import { IconButton } from "@/shared/ui/icon-button/icon-button";
 import { MdClose } from "react-icons/md";
+
+export interface ArtistSelectorHandle {
+  reset: () => void;
+}
 
 interface ArtistSelectorProps {
   onSelect: (ids: string[]) => void;
@@ -20,11 +24,21 @@ type ArtistItem = {
   mode: Mode;
 };
 
-export const ArtistSelector: React.FC<ArtistSelectorProps> = ({ onSelect }) => {
+export const ArtistSelector = forwardRef<
+  ArtistSelectorHandle,
+  ArtistSelectorProps
+>(({ onSelect }, ref) => {
   const { artistSearch, setArtistSearch, filtereArtistsOptions } =
     useFilteredArtists();
 
   const [artists, setArtists] = useState<ArtistItem[]>([]);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setArtists([]);
+      setArtistSearch("");
+    },
+  }));
 
   const notifyParent = (currentItems: ArtistItem[]) => {
     const ids = currentItems
@@ -137,4 +151,4 @@ export const ArtistSelector: React.FC<ArtistSelectorProps> = ({ onSelect }) => {
       )}
     </div>
   );
-};
+});

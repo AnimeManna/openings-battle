@@ -5,14 +5,13 @@ import { APP_CONFIG } from "@/shared/config";
 import { RateButton } from "@/shared/ui/rate-button/rate-button";
 import { ShieldButton } from "@/features/opening/shield-button/shield-button";
 import { useOpeningVote } from "@/entities/votes/hooks/useOpeningVote";
-import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
 import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
 import { useSwipeable } from "react-swipeable";
-import { getVideoEmbedUrl } from "@/shared/helpers/getVideoUrl";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Opening } from "@/entities/openings/model/types";
 import { useSnackbarStore } from "@/shared/model/snackbar/store";
 import { useOpeningsStore } from "@/entities/openings/model/store";
+import ReactPlayer from "react-player";
 
 const variants = {
   enter: (direction: number) => ({
@@ -71,6 +70,10 @@ export const RateOpening: React.FC = () => {
 
   const { opening, prevId, nextId } = navigation;
 
+  const [videoUrlToShow, setVideoUrlToShow] = useState<string>(
+    opening?.videoUrl ?? "",
+  );
+
   // const DEFAULT_TRESHHOLD = 5;
 
   // useEffect(() => {
@@ -115,8 +118,6 @@ export const RateOpening: React.FC = () => {
     show("Ваш голос успешно засчитан", "success", 1000);
   };
 
-  const youtubeId = getYoutubeId(opening.videoUrl);
-
   const scoreArray = Array.from({ length: APP_CONFIG.MAX_SCORE }).map(
     (_, index) => index + 1,
   );
@@ -142,14 +143,18 @@ export const RateOpening: React.FC = () => {
             className={classess.wrapper}
           >
             <p className={classess.title}>{opening.title}</p>
-            {youtubeId && (
-              <iframe
-                className={classess.thumbnailWrapper}
-                src={getVideoEmbedUrl(youtubeId)}
-                title="Preview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            {videoUrlToShow && videoUrlToShow.length > 0 && (
+              <div className={classess.videoWrapper}>
+                <ReactPlayer
+                  src={videoUrlToShow}
+                  width="100%"
+                  height="100%"
+                  controls
+                  onError={() => {
+                    setVideoUrlToShow(opening.backUpVideoUrl);
+                  }}
+                />
+              </div>
             )}
 
             <div className={classess.infoGrid}>

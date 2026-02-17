@@ -3,16 +3,22 @@ import classess from "./anime-selector.module.scss";
 import { AutoComplete } from "@/shared/ui/autocomplete/autocomplete";
 import { Button } from "@/shared/ui/button/button";
 import { CreateAnime } from "@/features/anime/create-anime/create-anime";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { Accordion } from "@/shared/ui/accordion/accordion";
 
+export interface AnimeSelectorHandle {
+  reset: () => void;
+}
 interface AnimeSelectorProps {
   onSelect: (id: string) => void;
 }
 
 type Mode = "search" | "creating" | "locked";
 
-export const AnimeSelector: React.FC<AnimeSelectorProps> = ({ onSelect }) => {
+export const AnimeSelector = forwardRef<
+  AnimeSelectorHandle,
+  AnimeSelectorProps
+>(({ onSelect }, ref) => {
   const { animeSearch, setAnimeSearch, filteredAnimeOptions } =
     useFilteredAnime();
 
@@ -20,7 +26,14 @@ export const AnimeSelector: React.FC<AnimeSelectorProps> = ({ onSelect }) => {
 
   const onCreateAnimeClick = () => {
     setMode("creating");
+    setAnimeSearch("");
   };
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setMode("search");
+    },
+  }));
 
   const onCancelCreateAnime = () => {
     setMode("search");
@@ -72,4 +85,4 @@ export const AnimeSelector: React.FC<AnimeSelectorProps> = ({ onSelect }) => {
       )}
     </div>
   );
-};
+});

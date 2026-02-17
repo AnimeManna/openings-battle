@@ -12,6 +12,7 @@ export interface Opening {
   id: string;
   title: string;
   videoUrl: string;
+  backUpVideoUrl: string;
   openingNum: number;
   anime: {
     id: string;
@@ -30,7 +31,7 @@ type SortedOpeningRow =
 
 export type SortedOpeningDTO = Omit<
   SortedOpeningRow,
-  "anime_data" | "artist"
+  "anime_data" | "artists"
 > & {
   anime_data: AnimeRow;
   artists: ArtistRow[];
