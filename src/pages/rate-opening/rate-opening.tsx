@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import classess from "./rate-opening.module.scss";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { APP_CONFIG } from "@/shared/config";
 import { RateButton } from "@/shared/ui/rate-button/rate-button";
 import { ShieldButton } from "@/features/opening/shield-button/shield-button";
@@ -73,6 +73,10 @@ export const RateOpening: React.FC = () => {
   const [videoUrlToShow, setVideoUrlToShow] = useState<string>(
     opening?.videoUrl ?? "",
   );
+
+  useEffect(() => {
+    setVideoUrlToShow(opening?.videoUrl);
+  }, [opening]);
 
   // const DEFAULT_TRESHHOLD = 5;
 
