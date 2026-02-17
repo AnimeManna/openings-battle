@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import classess from "./rate-opening.module.scss";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { APP_CONFIG } from "@/shared/config";
 import { RateButton } from "@/shared/ui/rate-button/rate-button";
 import { ShieldButton } from "@/features/opening/shield-button/shield-button";
@@ -70,13 +70,7 @@ export const RateOpening: React.FC = () => {
 
   const { opening, prevId, nextId } = navigation;
 
-  const [videoUrlToShow, setVideoUrlToShow] = useState<string>(
-    opening?.videoUrl ?? "",
-  );
-
-  useEffect(() => {
-    setVideoUrlToShow(opening?.videoUrl ?? "");
-  }, [opening]);
+  const [isVideoError, setIsVideoError] = useState<boolean>(false);
 
   // const DEFAULT_TRESHHOLD = 5;
 
@@ -89,6 +83,10 @@ export const RateOpening: React.FC = () => {
   //     fetchSortedOpenings(page + 1);
   //   }
   // }, [currentIndex, isLoading, page, fetchSortedOpenings, openings]);
+
+  const videoUrl = isVideoError
+    ? (opening?.backUpVideoUrl ?? "")
+    : (opening?.videoUrl ?? "");
 
   const [direction, setDirection] = useState(0);
 
@@ -147,16 +145,14 @@ export const RateOpening: React.FC = () => {
             className={classess.wrapper}
           >
             <p className={classess.title}>{opening.title}</p>
-            {videoUrlToShow && videoUrlToShow.length > 0 && (
+            {videoUrl && videoUrl.length > 0 && (
               <div className={classess.videoWrapper}>
                 <ReactPlayer
-                  src={videoUrlToShow}
+                  src={videoUrl}
                   width="100%"
                   height="100%"
                   controls
-                  onError={() => {
-                    setVideoUrlToShow(opening.backUpVideoUrl);
-                  }}
+                  onError={() => setIsVideoError(true)}
                 />
               </div>
             )}
