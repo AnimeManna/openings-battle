@@ -75,7 +75,7 @@ export const RateOpening: React.FC = () => {
   );
 
   useEffect(() => {
-    setVideoUrlToShow(opening?.videoUrl);
+    setVideoUrlToShow(opening?.videoUrl ?? "");
   }, [opening]);
 
   // const DEFAULT_TRESHHOLD = 5;
