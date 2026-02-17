@@ -94,7 +94,6 @@ export const StatisticsPage: React.FC = () => {
         <h2>Ваша статистика</h2>
       </motion.div>
 
-      {/* Верхний ряд: Цифры */}
       <div className={classsess.statsGrid}>
         <motion.div
           className={classsess.statCard}
