@@ -1,81 +1,82 @@
 import { create } from "zustand";
-import type { Profile } from "@/entities/auth/model/types";
 import supabase from "@/shared/supabase";
-import type { Opening } from "@/entities/openings/model/types";
+import type { Profile } from "@/entities/auth/model/types";
+import type { OpeningDTO } from "@/entities/openings/model/types";
+import { fetchAll } from "./helpers";
+import type { VoteDTO } from "@/entities/votes/model/types";
 
-type StatOpening = Opening & {
+export type StatOpening = OpeningDTO & {
   avgScore: number;
+  animeTitle: string;
 };
 
 interface AdminStatsState {
-  allProfiles: Profile[];
-  allOpenings: StatOpening[];
+  columns: Profile[];
+  rows: StatOpening[];
   matrix: Record<string, Record<string, number>>;
-  isLoading: boolean;
 
+  isLoading: boolean;
   fetchAdminData: () => Promise<void>;
 }
 
 export const useAdminStatsStore = create<AdminStatsState>((set) => ({
-  allOpenings: [],
+  columns: [],
+  rows: [],
   matrix: {},
-  allProfiles: [],
   isLoading: false,
 
   fetchAdminData: async () => {
     set({ isLoading: true });
 
     try {
-      const [votesData, metricsData] = await Promise.all([
-        supabase.from("votes").select("*, user_id(*), opening_id(*, anime(*))"),
+      const votesData = await fetchAll<VoteDTO>(
+        "votes",
+        "user_id, opening_id, rate",
+      );
+      const [profilesRes, openingsRes, metricsRes] = await Promise.all([
+        supabase.from("profiles").select("*").order("username"),
+        supabase.from("openings").select("*, anime(*)"),
         supabase.from("opening_metrics").select("*"),
       ]);
 
-      if (votesData.error) throw votesData.error;
-      if (metricsData.error) throw metricsData.error;
+      if (profilesRes.error) throw profilesRes.error;
+      if (openingsRes.error) throw openingsRes.error;
+      const metricsMap = new Map<string, number>();
+      metricsRes.data?.forEach((m) =>
+        metricsMap.set(m.opening_id, m.avg_score ?? 0),
+      );
 
-      if (votesData.data && metricsData.data) {
-        const matrix: Record<string, Record<string, number>> = {};
-        const openingsMap: Record<string, StatOpening> = {};
-        const allProfiles: Record<string, Profile> = {};
+      const rows: StatOpening[] = (openingsRes.data || []).map((op) => ({
+        ...op,
+        animeTitle: Array.isArray(op.anime)
+          ? (op.anime[0]?.english_title ?? "")
+          : op.anime?.english_title || "No Anime",
+        avgScore: metricsMap.get(op.id) ?? 0,
+      }));
 
-        votesData.data.forEach((vote) => {
-          if (!openingsMap[vote.opening_id.id]) {
-            openingsMap[vote.opening_id.id] = {
-              ...(typeof vote.opening_id === "object"
-                ? vote.opening_id
-                : ({} as Opening)),
-              anime: {
-                id: vote.opening_id.anime.id,
-                title: vote.opening_id.anime.english_title ?? "",
-              },
-              avgScore:
-                metricsData.data.find(
-                  (metric) => metric.opening_id === vote.opening_id.id,
-                )?.avg_score ?? 0,
-            };
-          }
+      // 4. СОБИРАЕМ СТОЛБЦЫ (Profiles)
+      const columns = profilesRes.data || [];
 
-          if (!allProfiles[vote.user_id.id]) {
-            allProfiles[vote.user_id.id] =
-              typeof vote.user_id === "object" ? vote.user_id : ({} as Profile);
-          }
+      const matrix: Record<string, Record<string, number>> = {};
 
-          if (!matrix[vote.opening_id.id]) {
-            matrix[vote.opening_id.id] = {};
-          }
-          matrix[vote.opening_id.id][vote.user_id.id] = vote.rate ?? 0;
-        });
+      votesData?.forEach((vote) => {
+        const opId = vote.opening_id as unknown as string;
+        const userId = vote.user_id as unknown as string;
 
-        set({
-          allProfiles: Object.values(allProfiles),
-          allOpenings: Object.values(openingsMap),
-          matrix,
-          isLoading: false,
-        });
-      }
+        if (!matrix[opId]) {
+          matrix[opId] = {};
+        }
+        matrix[opId][userId] = vote.rate ?? 0;
+      });
+
+      set({
+        rows,
+        columns,
+        matrix,
+        isLoading: false,
+      });
     } catch (e) {
-      console.error(e);
+      console.error("Failed to fetch admin stats:", e);
       set({ isLoading: false });
     }
   },

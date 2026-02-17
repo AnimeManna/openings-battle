@@ -5,9 +5,9 @@ import classess from "./openings-stats.module.scss";
 export const OpeningsStats = () => {
   const {
     fetchAdminData,
-    allOpenings: openings,
+    rows: openings,
+    columns: allUsers,
     matrix: votesMatrix,
-    allProfiles: allUsers,
     isLoading,
   } = useAdminStatsStore();
 
@@ -38,13 +38,10 @@ export const OpeningsStats = () => {
           <tbody>
             {openings.map((op) => (
               <tr key={op.id}>
-                <td className={classess.stickyCol} title={op.title}>
+                <td className={classess.stickyCol} title={op.animeTitle}>
                   <div className={classess.trackInfo}>
-                    <span className={classess.trackName}>{op.title}</span>
-
-                    <span className={classess.trackAnime}>
-                      {op.anime?.title}
-                    </span>
+                    <span className={classess.trackName}>{op.title}</span>{" "}
+                    <span className={classess.trackAnime}>{op.animeTitle}</span>
                   </div>
                 </td>
 
