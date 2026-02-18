@@ -10,7 +10,9 @@ export const formatOpening = (openingDTO: OpeningDTO): Opening => ({
   anime: openingDTO.anime
     ? {
         id: openingDTO.anime.id,
-        title: openingDTO.anime.english_title ?? "",
+        englishTitle: openingDTO.anime.english_title ?? "",
+        japaneseTitle: openingDTO.anime.japanese_title ?? "",
+        russianTitle: openingDTO.anime.russian_title ?? "",
       }
     : null,
   artists: [],
@@ -27,7 +29,9 @@ export const formatSortedOpening = (
   anime: sortedOpeningDTO.anime_data
     ? {
         id: sortedOpeningDTO.anime_data.id,
-        title: sortedOpeningDTO.anime_data.english_title ?? "",
+        englishTitle: sortedOpeningDTO.anime_data.english_title ?? "",
+        japaneseTitle: sortedOpeningDTO.anime_data.japanese_title ?? "",
+        russianTitle: sortedOpeningDTO.anime_data.russian_title ?? "",
       }
     : null,
   artists: sortedOpeningDTO.artists

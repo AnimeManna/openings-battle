@@ -29,7 +29,7 @@ export const OpeningCard: React.FC<OpeningCardProps> = ({
       <div className={classess.overlay}>
         <p className={classess.title}>{title}</p>
         <p className={classess.anime}>
-          {anime?.title} {openingNum}op
+          {anime?.englishTitle} {openingNum}op
         </p>
       </div>
     </div>

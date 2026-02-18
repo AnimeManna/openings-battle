@@ -18,7 +18,9 @@ export const useFilteredOpenings = () => {
     return new Fuse(Array.from(openingsMap.values()), {
       keys: [
         { name: "title", weight: 1 },
-        { name: "anime.title", weight: 1 },
+        { name: "anime.englishTitle", weight: 1 },
+        { name: "anime.japaneseTitle", weight: 1 },
+        { name: "anime.russianTitle", weight: 1 },
         { name: "artists.name", weight: 0.8 },
       ],
       threshold: 0.3,

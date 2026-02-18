@@ -47,7 +47,9 @@ export const OpeningListPreview: React.FC<OpeningInfoProps> = ({ opening }) => {
           <div className={classess.value}>{opening.title}</div>
 
           <div className={classess.label}>Аниме</div>
-          <div className={classess.value}>{opening.anime?.title}</div>
+          <div className={classess.value}>
+            {opening.anime?.englishTitle} -- {opening.anime?.japaneseTitle}
+          </div>
 
           <div className={classess.label}>Номер Опенинга</div>
           <div className={classess.value}>{opening.openingNum}</div>

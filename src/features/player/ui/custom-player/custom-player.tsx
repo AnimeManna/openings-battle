@@ -128,7 +128,7 @@ export const CustomPlayer: React.FC<CustomPlayerProps> = ({ opening }) => {
           }}
         />
 
-        {isSpoilerProof && <div className={classesss.blur} />}
+        {isSpoilerProof && isCustomPlayer && <div className={classesss.blur} />}
       </div>
       {isCustomPlayer && (
         <PlayerControls

@@ -37,7 +37,10 @@ export const OpeningRow = ({ opening, children }: OpeningRowProps) => {
         <div className={classess.header}>
           <div className={classess.info}>
             <p className={classess.title}>{opening.title}</p>
-            <p className={classess.anime}>{opening.anime?.title}</p>
+            <p className={classess.anime}>
+              {opening.anime?.englishTitle} -- {opening.anime?.japaneseTitle} --{" "}
+              {opening.anime?.russianTitle}
+            </p>
           </div>
 
           {renderStatusRing()}

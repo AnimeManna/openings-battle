@@ -16,7 +16,9 @@ export interface Opening {
   openingNum: number;
   anime: {
     id: string;
-    title: string;
+    englishTitle: string;
+    japaneseTitle: string;
+    russianTitle: string;
   } | null;
   artists:
     | {
