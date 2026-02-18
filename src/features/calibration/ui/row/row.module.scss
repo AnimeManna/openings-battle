@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  column-gap: 8px;
+  width: 100%;
+  border-bottom: 1px solid $border-color;
+
+  transition: background 0.1s ease-in-out;
+}
+
+.titleWrapper {
+  display: flex;
+  width: 60px;
+  min-width: 60px;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-surface;
+}
+
+.title {
+  text-align: center;
+  transform: rotate(-90deg);
+
+  font-size: 24px;
+  font-weight: 600;
+  color: $accent-gold;
+  white-space: nowrap;
+
+  display: inline-block;
+  transform-origin: center;
+}
+
+.list {
+  display: flex;
+  column-gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

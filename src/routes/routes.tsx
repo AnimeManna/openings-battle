@@ -11,6 +11,7 @@ import { RateOpening } from "@/pages/rate-opening/rate-opening";
 import { NotFoundPage } from "@/pages/not-found/not-found";
 import { OpeningsStats } from "@/pages/admin/openings-stats/openings-stats";
 import { StatisticsPage } from "@/pages/statistics/statistics";
+import { CalibrationPage } from "@/pages/calibration/calibration";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
@@ -24,7 +25,8 @@ export const router = createBrowserRouter([
         children: [
           { path: "*", element: <NotFoundPage /> },
           { index: true, element: <HomeComponent /> },
-          { path: "/statistics", element: <StatisticsPage /> },
+          { path: "statistics", element: <StatisticsPage /> },
+          { path: "calibration", element: <CalibrationPage /> },
           {
             path: "openings",
             children: [

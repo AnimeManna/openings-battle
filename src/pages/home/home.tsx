@@ -7,6 +7,7 @@ import { HomeInfo } from "@/widgets/home/info/info";
 import { useVotesStore } from "@/entities/votes/model/store";
 import { useMemo } from "react";
 import { useOpeningsStore } from "@/entities/openings/model/store";
+import { MdFormatListBulleted } from "react-icons/md";
 
 export const HomeComponent: React.FC = () => {
   const openings = useOpeningsStore((state) => state.openings);
@@ -36,6 +37,13 @@ export const HomeComponent: React.FC = () => {
       </div>
       <div className={classess.tile}>
         <NavTile icon={<GiTrophyCup />} label="Статистика" to="/statistics" />
+      </div>
+      <div className={classess.tile}>
+        <NavTile
+          icon={<MdFormatListBulleted />}
+          label="Калибровка"
+          to="/calibration"
+        />
       </div>
     </div>
   );
