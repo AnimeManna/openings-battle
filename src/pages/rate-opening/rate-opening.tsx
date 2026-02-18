@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Opening } from "@/entities/openings/model/types";
 import { useSnackbarStore } from "@/shared/model/snackbar/store";
 import { useOpeningsStore } from "@/entities/openings/model/store";
-import ReactPlayer from "react-player";
+import { CustomPlayer } from "@/features/player/ui/custom-player/custom-player";
 
 const variants = {
   enter: (direction: number) => ({
@@ -70,8 +70,6 @@ export const RateOpening: React.FC = () => {
 
   const { opening, prevId, nextId } = navigation;
 
-  const [isVideoError, setIsVideoError] = useState<boolean>(false);
-
   // const DEFAULT_TRESHHOLD = 5;
 
   // useEffect(() => {
@@ -83,10 +81,6 @@ export const RateOpening: React.FC = () => {
   //     fetchSortedOpenings(page + 1);
   //   }
   // }, [currentIndex, isLoading, page, fetchSortedOpenings, openings]);
-
-  const videoUrl = isVideoError
-    ? (opening?.backUpVideoUrl ?? "")
-    : (opening?.videoUrl ?? "");
 
   const [direction, setDirection] = useState(0);
 
@@ -145,17 +139,7 @@ export const RateOpening: React.FC = () => {
             className={classess.wrapper}
           >
             <p className={classess.title}>{opening.title}</p>
-            {videoUrl && videoUrl.length > 0 && (
-              <div className={classess.videoWrapper}>
-                <ReactPlayer
-                  src={videoUrl}
-                  width="100%"
-                  height="100%"
-                  controls
-                  onError={() => setIsVideoError(true)}
-                />
-              </div>
-            )}
+            {opening && <CustomPlayer opening={opening} />}
 
             <div className={classess.infoGrid}>
               <div className={classess.label}>Аниме</div>

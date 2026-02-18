@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: $radius-md $radius-md 0 0;
+  overflow: hidden;
+  position: relative;
+
+  border: 1px solid $border-color;
+  border-bottom: none;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+.blur {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  backdrop-filter: blur(40px);
+}
