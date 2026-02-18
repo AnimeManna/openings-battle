@@ -17,7 +17,6 @@ export const Range = forwardRef<HTMLInputElement, Props>(
         ? 0
         : ((currentValue - minVal) / (maxVal - minVal)) * 100;
 
-    console.log(currentValue, value);
     return (
       <input
         ref={ref}

@@ -4,6 +4,8 @@ import ReactPlayer from "react-player";
 import { useEffect, useRef, useState } from "react";
 import { PlayerControls } from "../controls/controls";
 import { usePlayerStore } from "@/entities/player/model/store";
+import { Switch } from "@/shared/ui/switch/switch";
+import clsx from "clsx";
 
 interface CustomPlayerProps {
   opening: Opening;
@@ -11,7 +13,13 @@ interface CustomPlayerProps {
 
 export const CustomPlayer: React.FC<CustomPlayerProps> = ({ opening }) => {
   const [isVideoError, setIsVideoError] = useState<boolean>(false);
-  const { volume, isMuted, isSpoilerProof } = usePlayerStore();
+  const {
+    volume,
+    isMuted,
+    isSpoilerProof,
+    isCustomPlayer,
+    toggleIsCustomPlayer,
+  } = usePlayerStore();
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -87,13 +95,22 @@ export const CustomPlayer: React.FC<CustomPlayerProps> = ({ opening }) => {
 
   return (
     <div className={classesss.container} ref={containerRef}>
-      <div className={classesss.wrapper}>
+      <div className={classesss.header}>
+        <p className={classesss.switchLabel}>Обычный плеер</p>
+        <Switch checked={isCustomPlayer} onToggle={toggleIsCustomPlayer} />
+        <p className={classesss.switchLabel}>Кастомный</p>
+      </div>
+      <div
+        className={clsx(classesss.wrapper, {
+          [classesss.custom]: isCustomPlayer,
+        })}
+      >
         <ReactPlayer
           ref={playerRef}
           src={videoUrl}
           width="100%"
           height="100%"
-          controls={false}
+          controls={!isCustomPlayer}
           muted={isMuted}
           playing={isPlaying}
           volume={volume}
@@ -113,17 +130,19 @@ export const CustomPlayer: React.FC<CustomPlayerProps> = ({ opening }) => {
 
         {isSpoilerProof && <div className={classesss.blur} />}
       </div>
-      <PlayerControls
-        isPlaying={isPlaying}
-        onTogglePlay={() => setIsPlaying(!isPlaying)}
-        played={played}
-        duration={duration}
-        onSeekMouseDown={handleSeekMouseDown}
-        onSeekMouseUp={handleSeekMouseUp}
-        onSeekChange={handleSeekChange}
-        isFullScreen={isFullScreen}
-        toggleFullscreen={toggleFullscreen}
-      />
+      {isCustomPlayer && (
+        <PlayerControls
+          isPlaying={isPlaying}
+          onTogglePlay={() => setIsPlaying(!isPlaying)}
+          played={played}
+          duration={duration}
+          onSeekMouseDown={handleSeekMouseDown}
+          onSeekMouseUp={handleSeekMouseUp}
+          onSeekChange={handleSeekChange}
+          isFullScreen={isFullScreen}
+          toggleFullscreen={toggleFullscreen}
+        />
+      )}
     </div>
   );
 };

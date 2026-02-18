@@ -57,11 +57,15 @@ export const CalibrationBoard: React.FC = () => {
       });
     }
 
-    result.push({
-      id: UNRATED_ROW_ID,
-      title: UNRATED_ROW_TITLE,
-      list: unratedList,
-    });
+    console.log(unratedList);
+
+    if (unratedList.length > 0) {
+      result.push({
+        id: UNRATED_ROW_ID,
+        title: UNRATED_ROW_TITLE,
+        list: unratedList,
+      });
+    }
 
     return result;
   }, [votesMap, openingsMap]);

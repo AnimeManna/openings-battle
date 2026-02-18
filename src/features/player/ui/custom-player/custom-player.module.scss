@@ -4,10 +4,22 @@
   width: 100%;
 }
 
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 4px;
+  margin-bottom: 8px;
+}
+
+.switchLabel {
+  font-weight: 600;
+}
+
 .wrapper {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: $radius-md $radius-md 0 0;
+  border-radius: $radius-md;
   overflow: hidden;
   position: relative;
 
@@ -17,6 +29,10 @@
   @media (max-width: 1024px) {
     width: 100%;
   }
+}
+
+.custom {
+  border-radius: $radius-md $radius-md 0 0;
 }
 
 .blur {

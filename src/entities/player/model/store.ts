@@ -13,6 +13,8 @@ interface PlayerState {
   toggleMute: () => void;
   setSource: (source: Source) => void;
   setIsSpoilerProof: () => void;
+  isCustomPlayer: boolean;
+  toggleIsCustomPlayer: () => void;
 }
 
 export const usePlayerStore = create<PlayerState>()(
@@ -22,12 +24,18 @@ export const usePlayerStore = create<PlayerState>()(
       isMuted: false,
       videoSource: "main",
       isSpoilerProof: false,
+      isCustomPlayer: true,
       setVolume: (volume) => set({ volume: volume, isMuted: volume === 0 }),
       toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
       setSource: (source) => set({ videoSource: source }),
+      toggleIsCustomPlayer: () => {
+        console.log("toggle");
+        set((state) => ({ isCustomPlayer: !state.isCustomPlayer }));
+      },
       setIsSpoilerProof: () =>
         set((state) => ({ isSpoilerProof: !state.isSpoilerProof })),
     }),
+
     { name: "player-settings" },
   ),
 );
