@@ -113,7 +113,7 @@ export const CustomPlayer: React.FC<CustomPlayerProps> = ({ opening }) => {
           controls={!isCustomPlayer}
           muted={isMuted}
           playing={isPlaying}
-          volume={volume}
+          volume={isCustomPlayer ? volume : undefined}
           onError={() => setIsVideoError(true)}
           onDurationChange={handleDurationChange}
           onTimeUpdate={handleTimeUpdate}
