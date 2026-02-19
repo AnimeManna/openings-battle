@@ -15,23 +15,29 @@
 }
 
 .overlay {
+  padding: 20px 0;
   position: absolute;
   inset: 0;
   background-color: rgba($bg-main, 0.8);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  row-gap: 24px;
+  row-gap: 8px;
 
   opacity: 0;
   transition: opacity 0.1s ease-in-out;
   pointer-events: none;
 }
 
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
 .title {
   width: 100%;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -44,4 +50,9 @@
 .container:hover .overlay {
   opacity: 1;
   pointer-events: auto;
+}
+
+.action {
+  display: flex;
+  justify-content: center;
 }

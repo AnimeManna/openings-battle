@@ -5,15 +5,11 @@
   justify-content: center;
   gap: 8px;
 
-  height: 44px;
-  padding: 0 20px;
-
   border: none;
   border-radius: $radius-md;
 
   font-family: inherit;
   font-weight: 600;
-  font-size: 14px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   cursor: pointer;
@@ -36,6 +32,18 @@
   &:active:not(:disabled) {
     transform: scale(0.96);
   }
+}
+
+.xs {
+  height: 30px;
+  padding: 0 8px;
+  font-size: 0.75rem;
+}
+
+.md {
+  height: 44px;
+  padding: 0 20px;
+  font-size: 1rem;
 }
 
 .primary {

@@ -1,1 +1,23 @@
+.modal {
+  width: 700px;
+  background-color: $bg-main;
+  border-radius: $radius-md;
 
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+
+  @media (max-width: 1024px) {
+    padding: 0;
+    width: 100vw;
+    padding: 4px 0;
+  }
+
+  &__header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px;
+    border-bottom: 1px solid $border-color;
+  }
+}

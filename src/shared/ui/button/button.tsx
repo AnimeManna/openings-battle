@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
 import clsx from "clsx";
-import s from "./button.module.scss";
+import classess from "./button.module.scss";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger";
@@ -8,6 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
+  size?: "md" | "xs";
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -21,6 +22,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       leftIcon,
       rightIcon,
       disabled,
+      size = "md",
       ...props
     },
     ref,
@@ -30,20 +32,21 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={clsx(
-          s.button,
-          s[variant],
-          fullWidth && s.fullWidth,
+          classess.button,
+          classess[variant],
+          fullWidth && classess.fullWidth,
           className,
+          classess[size],
         )}
         {...props}
       >
         {isLoading ? (
-          <span className={s.spinner} aria-label="Loading" />
+          <span className={classess.spinner} aria-label="Loading" />
         ) : (
           <>
-            {leftIcon && <span className={s.icon}>{leftIcon}</span>}
+            {leftIcon && <span className={classess.icon}>{leftIcon}</span>}
             {children}
-            {rightIcon && <span className={s.icon}>{rightIcon}</span>}
+            {rightIcon && <span className={classess.icon}>{rightIcon}</span>}
           </>
         )}
       </button>

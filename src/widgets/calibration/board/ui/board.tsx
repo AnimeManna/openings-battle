@@ -2,7 +2,7 @@ import { useVotesStore } from "@/entities/votes/model/store";
 import { CalibrationCard } from "@/features/calibration/ui/card/card";
 import { CalibrationRow } from "@/features/calibration/ui/row/row";
 import { DragDropProvider, type DragEndEvent } from "@dnd-kit/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   DndContext,
   MouseSensor,
@@ -12,6 +12,10 @@ import {
 } from "@dnd-kit/core";
 import { useOpeningsStore } from "@/entities/openings/model/store";
 import classess from "./board.module.scss";
+import { Modal } from "@/shared/ui/modal/modal";
+import { CustomPlayer } from "@/features/player/ui/custom-player/custom-player";
+import { IconButton } from "@/shared/ui/icon-button/icon-button";
+import { MdClose } from "react-icons/md";
 
 const getRateId = (rate: number): string => `rate-${rate}`;
 const parseRateFromId = (id: string): number =>
@@ -29,6 +33,15 @@ const UNRATED_ROW_TITLE = "Неоцененные";
 export const CalibrationBoard: React.FC = () => {
   const { votesMap, submitVote } = useVotesStore();
   const { openingsMap } = useOpeningsStore();
+
+  const [selectedOpeningId, setSelectedOpeningId] = useState<string | null>(
+    null,
+  );
+
+  const selectedOpening = useMemo(
+    () => (selectedOpeningId ? openingsMap.get(selectedOpeningId) : null),
+    [selectedOpeningId, openingsMap],
+  );
 
   const data = useMemo(() => {
     const rowsMap = new Map<number, string[]>();
@@ -105,6 +118,14 @@ export const CalibrationBoard: React.FC = () => {
     submitVote(openingId, rate);
   };
 
+  const onCloseModal = () => {
+    setSelectedOpeningId(null);
+  };
+
+  const openModal = (opening: string) => {
+    setSelectedOpeningId(opening);
+  };
+
   return (
     <div>
       <DndContext sensors={sensors}>
@@ -113,13 +134,29 @@ export const CalibrationBoard: React.FC = () => {
             {data.map((data) => (
               <CalibrationRow key={data.id} id={data.id} title={data.title}>
                 {data.list.map((item) => (
-                  <CalibrationCard key={item} id={item} />
+                  <CalibrationCard
+                    key={item}
+                    openingId={item}
+                    onSelect={openModal}
+                  />
                 ))}
               </CalibrationRow>
             ))}
           </div>
         </DragDropProvider>
       </DndContext>
+      {selectedOpening && (
+        <Modal onClose={onCloseModal}>
+          <div className={classess.modal}>
+            <div className={classess["modal__header"]}>
+              <IconButton icon={<MdClose />} size="sm" onClick={onCloseModal} />
+            </div>
+            <div className={classess["modal__wrapper"]}>
+              <CustomPlayer opening={selectedOpening} />
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
