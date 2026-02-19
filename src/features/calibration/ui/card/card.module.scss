@@ -1,6 +1,22 @@
 .container {
   width: 300px;
   min-width: 300px;
-  cursor: pointer;
   touch-action: manipulation;
+  position: relative;
+  background-color: $bg-main;
+  border-radius: $radius-md;
+}
+
+.dragButton {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  z-index: 100;
+
+  border: none;
+  background-color: $bg-elevated;
+  width: 50px;
+  border-radius: 0 0 $radius-sm $radius-sm;
+  cursor: pointer;
 }

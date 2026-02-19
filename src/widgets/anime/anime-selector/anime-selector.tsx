@@ -26,12 +26,12 @@ export const AnimeSelector = forwardRef<
 
   const onCreateAnimeClick = () => {
     setMode("creating");
-    setAnimeSearch("");
   };
 
   useImperativeHandle(ref, () => ({
     reset: () => {
       setMode("search");
+      setAnimeSearch("");
     },
   }));
 

@@ -3,13 +3,13 @@ import { OpeningCard } from "@/entities/openings/ui/card/opening-card";
 import { useDraggable } from "@dnd-kit/react";
 import { useMemo } from "react";
 import classess from "./card.module.scss";
-
+import { MdDragHandle } from "react-icons/md";
 interface CalibrationCardProps {
   id: string;
 }
 
 export const CalibrationCard: React.FC<CalibrationCardProps> = ({ id }) => {
-  const { ref } = useDraggable({
+  const { ref, handleRef } = useDraggable({
     id,
   });
 
@@ -19,6 +19,9 @@ export const CalibrationCard: React.FC<CalibrationCardProps> = ({ id }) => {
 
   return (
     <div ref={ref} className={classess.container}>
+      <button className={classess.dragButton} ref={handleRef}>
+        <MdDragHandle />
+      </button>
       {opening && <OpeningCard {...opening} />}
     </div>
   );
