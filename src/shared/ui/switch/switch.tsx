@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import clsx from "clsx";
-import styles from "./Switch.module.scss";
+import classess from "./switch.module.scss";
 
 interface SwitchProps {
   className?: string;
@@ -11,15 +11,15 @@ interface SwitchProps {
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   ({ className, onToggle, checked }, ref) => {
     return (
-      <div className={clsx(styles.container, className)} onClick={onToggle}>
-        <div className={styles.switch}>
+      <div className={clsx(classess.container, className)} onClick={onToggle}>
+        <div className={classess.switch}>
           <input
             ref={ref}
             type="checkbox"
-            className={styles.input}
+            className={classess.input}
             checked={checked}
           />
-          <span className={styles.slider} />
+          <span className={classess.slider} />
         </div>
       </div>
     );
