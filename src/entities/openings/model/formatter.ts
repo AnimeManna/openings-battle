@@ -7,6 +7,7 @@ export const formatOpening = (openingDTO: OpeningDTO): Opening => ({
   videoUrl: "",
   backUpVideoUrl: "",
   openingNum: openingDTO.opening_num ?? 1,
+  seasonNum: openingDTO.season_num ?? 1,
   anime: openingDTO.anime
     ? {
         id: openingDTO.anime.id,
@@ -23,9 +24,10 @@ export const formatSortedOpening = (
 ): Opening => ({
   id: sortedOpeningDTO.id,
   title: getAccumulatedOpeningTitle(sortedOpeningDTO),
-  videoUrl: sortedOpeningDTO.video_url,
-  backUpVideoUrl: sortedOpeningDTO.back_up_video_url,
+  videoUrl: sortedOpeningDTO.youtube_url_main,
+  backUpVideoUrl: sortedOpeningDTO.youtube_url_extra,
   openingNum: sortedOpeningDTO.opening_num ?? 1,
+  seasonNum: sortedOpeningDTO.season_num ?? 1,
   anime: sortedOpeningDTO.anime_data
     ? {
         id: sortedOpeningDTO.anime_data.id,

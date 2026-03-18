@@ -14,6 +14,7 @@ export interface Opening {
   videoUrl: string;
   backUpVideoUrl: string;
   openingNum: number;
+  seasonNum: number;
   anime: {
     id: string;
     englishTitle: string;
