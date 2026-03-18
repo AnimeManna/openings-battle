@@ -1,7 +1,7 @@
 import type { Opening } from "@/entities/openings/model/types";
 import classesss from "./custom-player.module.scss";
 import ReactPlayer from "react-player";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PlayerControls } from "../controls/controls";
 import { usePlayerStore } from "@/entities/player/model/store";
 import { Switch } from "@/shared/ui/switch/switch";
@@ -93,6 +93,21 @@ export const CustomPlayer: React.FC<CustomPlayerProps> = ({ opening }) => {
     ? (opening?.backUpVideoUrl ?? "")
     : (opening?.videoUrl ?? "");
 
+  const customPlayerProps = useMemo(
+    () =>
+      isCustomPlayer
+        ? {
+            isMuted,
+            isPlaying,
+            volume,
+            controls: false,
+          }
+        : {
+            controls: true,
+          },
+    [isCustomPlayer, isMuted, isPlaying, volume],
+  );
+
   return (
     <div className={classesss.container} ref={containerRef}>
       <div className={classesss.header}>
@@ -110,13 +125,10 @@ export const CustomPlayer: React.FC<CustomPlayerProps> = ({ opening }) => {
           src={videoUrl}
           width="100%"
           height="100%"
-          controls={!isCustomPlayer}
-          muted={isMuted}
-          playing={isPlaying}
-          volume={isCustomPlayer ? volume : undefined}
+          {...customPlayerProps}
+          onDurationChange={isCustomPlayer ? handleDurationChange : undefined}
+          onTimeUpdate={isCustomPlayer ? handleTimeUpdate : undefined}
           onError={() => setIsVideoError(true)}
-          onDurationChange={handleDurationChange}
-          onTimeUpdate={handleTimeUpdate}
           onPlay={() => {
             setIsPlaying(true);
           }}

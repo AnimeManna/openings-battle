@@ -80,7 +80,9 @@ export const StatisticsPage: React.FC = () => {
   const pieData = useMemo(() => {
     return [
       { name: "Оценено", value: myVotes.size },
-      { name: "Осталось", value: openings.size - myVotes.size },
+      ...(openings.size - myVotes.size
+        ? [{ name: "Осталось", value: openings.size - myVotes.size }]
+        : []),
     ];
   }, [myVotes.size, openings.size]);
 
