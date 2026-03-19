@@ -1,6 +1,14 @@
-import { useEffect } from "react";
-import { useAdminStatsStore } from "@/features/admin/model/store";
+import { useMemo, useEffect } from "react";
+import { type ColumnDef } from "@tanstack/react-table";
+import {
+  useAdminStatsStore,
+  type StatOpening,
+} from "@/features/admin/model/store";
+
 import classess from "./openings-stats.module.scss";
+import { DataGrid } from "@/shared/ui/data-grid/data-grid";
+
+type OpeningRow = StatOpening;
 
 export const OpeningsStats = () => {
   const {
@@ -8,65 +16,69 @@ export const OpeningsStats = () => {
     rows: openings,
     columns: allUsers,
     matrix: votesMatrix,
-    isLoading,
   } = useAdminStatsStore();
 
   useEffect(() => {
     fetchAdminData();
   }, []);
 
-  if (isLoading) return <div>Загружаем всю правду о судьях...</div>;
+  const columns = useMemo<ColumnDef<OpeningRow>[]>(() => {
+    if (!allUsers || !allUsers.length) return [];
+
+    const baseColumn: ColumnDef<OpeningRow> = {
+      id: "opening",
+      header: "Opening Name",
+      size: 600,
+      cell: (info) => {
+        const opening = info.row.original;
+        return (
+          <div className={classess.openingName} title={opening.animeTitle}>
+            <span className={classess.trackName}>{opening.title}</span>{" "}
+            <span className={classess.trackAnime}>{opening.animeTitle}</span>
+          </div>
+        );
+      },
+    };
+
+    const userColumns: ColumnDef<OpeningRow>[] = allUsers.map((user) => ({
+      id: user.id,
+      header: () => (
+        <div className={classess.verticalText}>{user.username}</div>
+      ),
+
+      accessorFn: (row) => votesMatrix[row.id]?.[user.id],
+
+      cell: (info) => {
+        const rate = info.getValue() as number | undefined;
+        return rate ? (
+          <span className={classess.rateBadge} data-val={rate}>
+            {rate}
+          </span>
+        ) : (
+          <span className={classess.empty}>-</span>
+        );
+      },
+    }));
+
+    const avgColumn: ColumnDef<OpeningRow> = {
+      accessorKey: "avgScore",
+      header: "AVG",
+      cell: (info) => {
+        const val = info.getValue() as number;
+        return <div className={classess.avgCell}>{val?.toFixed(1)}</div>;
+      },
+    };
+
+    return [baseColumn, ...userColumns, avgColumn];
+  }, [allUsers, votesMatrix]);
 
   return (
     <div className={classess.container}>
-      <div className={classess.tableWrapper}>
-        <table className={classess.table}>
-          <thead>
-            <tr className={classess.userRow}>
-              <th className={classess.stickyCol}>Track / User</th>
-
-              {allUsers.map((user) => (
-                <th key={user.id} className={classess.userHeader}>
-                  <div className={classess.verticalText}>{user.username}</div>
-                </th>
-              ))}
-
-              <th>AVG</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {openings.map((op) => (
-              <tr key={op.id}>
-                <td className={classess.stickyCol} title={op.animeTitle}>
-                  <div className={classess.trackInfo}>
-                    <span className={classess.trackName}>{op.title}</span>{" "}
-                    <span className={classess.trackAnime}>{op.animeTitle}</span>
-                  </div>
-                </td>
-
-                {allUsers.map((user) => {
-                  const rate = votesMatrix[op.id]?.[user.id];
-
-                  return (
-                    <td key={user.id} className={classess.cell}>
-                      {rate ? (
-                        <span className={classess.rateBadge} data-val={rate}>
-                          {rate}
-                        </span>
-                      ) : (
-                        <span className={classess.empty}>-</span>
-                      )}
-                    </td>
-                  );
-                })}
-
-                <td className={classess.avgCell}>{op.avgScore.toFixed(1)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataGrid
+        data={openings}
+        columns={columns}
+        defaultPinnedState={{ left: ["opening"], right: ["avgScore"] }}
+      />
     </div>
   );
 };

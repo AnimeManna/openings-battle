@@ -31,6 +31,7 @@ export const Layout: React.FC = () => {
       <div className={classess.outlet}>
         <Outlet />
       </div>
+      <div className={classess.toolbar}></div>
       <MainFooter />
     </div>
   );

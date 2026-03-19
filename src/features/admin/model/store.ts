@@ -34,7 +34,11 @@ export const useAdminStatsStore = create<AdminStatsState>((set) => ({
         "user_id, opening_id, rate",
       );
       const [profilesRes, openingsRes, metricsRes] = await Promise.all([
-        supabase.from("profiles").select("*").order("username"),
+        supabase
+          .from("profiles")
+          .select("*")
+          .neq("is_service_account", true)
+          .order("username"),
         supabase.from("openings").select("*, anime(*)"),
         supabase.from("opening_metrics").select("*"),
       ]);
