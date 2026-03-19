@@ -29,7 +29,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $bg-elevated;
+  background-color: $bg-main;
 
   border-right: 1px solid $border-color;
   border-bottom: 1px solid $border-color;
@@ -55,4 +55,12 @@
 
   flex: 1;
   min-height: 1px;
+
+  &__row {
+    &:hover {
+      .column {
+        background-color: $bg-elevated;
+      }
+    }
+  }
 }

@@ -20,31 +20,7 @@
   width: 100%;
 }
 
-.rateBadge {
-  display: inline-flex;
-  width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  font-weight: bold;
-  background: #333;
-
-  /* Раскраска оценок */
-  &[data-val="10"] {
-    background: gold;
-    color: black;
-  }
-  &[data-val="9"] {
-    background: orange;
-    color: black;
-  }
-  &[data-val="1"] {
-    background: red;
-    color: white;
-  }
-}
-
 .empty {
   color: #444;
+  font-weight: 600;
 }

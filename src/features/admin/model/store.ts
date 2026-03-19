@@ -50,15 +50,16 @@ export const useAdminStatsStore = create<AdminStatsState>((set) => ({
         metricsMap.set(m.opening_id, m.avg_score ?? 0),
       );
 
-      const rows: StatOpening[] = (openingsRes.data || []).map((op) => ({
-        ...op,
-        animeTitle: Array.isArray(op.anime)
-          ? (op.anime[0]?.english_title ?? "")
-          : op.anime?.english_title || "No Anime",
-        avgScore: metricsMap.get(op.id) ?? 0,
-      }));
+      const rows: StatOpening[] = (openingsRes.data || [])
+        .map((op) => ({
+          ...op,
+          animeTitle: Array.isArray(op.anime)
+            ? (op.anime[0]?.english_title ?? "")
+            : op.anime?.english_title || "No Anime",
+          avgScore: metricsMap.get(op.id) ?? 0,
+        }))
+        .sort((a, b) => b.avgScore - a.avgScore);
 
-      // 4. СОБИРАЕМ СТОЛБЦЫ (Profiles)
       const columns = profilesRes.data || [];
 
       const matrix: Record<string, Record<string, number>> = {};

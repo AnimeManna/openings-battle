@@ -1,0 +1,24 @@
+.container {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: bold;
+  background: #333;
+}
+
+.exellent {
+  background: $bg-orage;
+  color: black;
+}
+.good {
+  background: $bg-gold;
+  color: black;
+}
+
+.danger {
+  background: $bg-danger;
+  color: $text-main;
+}

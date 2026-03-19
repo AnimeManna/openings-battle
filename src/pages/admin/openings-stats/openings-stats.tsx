@@ -7,6 +7,7 @@ import {
 
 import classess from "./openings-stats.module.scss";
 import { DataGrid } from "@/shared/ui/data-grid/data-grid";
+import { AdminBadge } from "@/features/admin/ui/badge/admin-badge";
 
 type OpeningRow = StatOpening;
 
@@ -51,11 +52,9 @@ export const OpeningsStats = () => {
       cell: (info) => {
         const rate = info.getValue() as number | undefined;
         return rate ? (
-          <span className={classess.rateBadge} data-val={rate}>
-            {rate}
-          </span>
+          <AdminBadge rate={rate} />
         ) : (
-          <span className={classess.empty}>-</span>
+          <div className={classess.empty}>-</div>
         );
       },
     }));
@@ -77,7 +76,7 @@ export const OpeningsStats = () => {
       <DataGrid
         data={openings}
         columns={columns}
-        defaultPinnedState={{ left: ["opening"], right: ["avgScore"] }}
+        defaultPinnedState={{ left: ["opening"] }}
       />
     </div>
   );
