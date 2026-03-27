@@ -8,6 +8,9 @@ import { useVotesStore } from "@/entities/votes/model/store";
 import { useMemo } from "react";
 import { useOpeningsStore } from "@/entities/openings/model/store";
 import { MdFormatListBulleted } from "react-icons/md";
+import { MdQueryStats } from "react-icons/md";
+import { TbTournament } from "react-icons/tb";
+import { TbCards } from "react-icons/tb";
 
 export const HomeComponent: React.FC = () => {
   const openings = useOpeningsStore((state) => state.openings);
@@ -23,6 +26,23 @@ export const HomeComponent: React.FC = () => {
       <div className={classess.tile}>
         <HomeInfo />
       </div>
+      <div className={classess.tile}>
+        <NavTile
+          icon={<TbCards />}
+          label="Продолжить второй этап"
+          to="/openings"
+        />
+      </div>
+      <div className={classess.tile}>
+        <NavTile icon={<TbTournament />} label="Стейджи" to="/stages" />
+      </div>
+      <div className={classess.tile}>
+        <NavTile
+          icon={<GiTrophyCup />}
+          label="Общий тир лист"
+          to="/tier-list"
+        />
+      </div>
       {nextOpening && (
         <div className={classess.tile}>
           <NavTile
@@ -36,7 +56,11 @@ export const HomeComponent: React.FC = () => {
         <NavTile icon={<MdListAlt />} label="Мой список" to="/openings" />
       </div>
       <div className={classess.tile}>
-        <NavTile icon={<GiTrophyCup />} label="Статистика" to="/statistics" />
+        <NavTile
+          icon={<MdQueryStats />}
+          label="Моя статистика"
+          to="/statistics"
+        />
       </div>
       <div className={classess.tile}>
         <NavTile

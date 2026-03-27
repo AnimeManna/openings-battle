@@ -1,0 +1,26 @@
+.container {
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  min-height: 1px;
+}
+
+.stickyCol {
+  position: sticky;
+  left: 0;
+  background-color: #1a1a1a;
+  z-index: 2;
+  text-align: left !important;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.openingName {
+  text-align: left;
+  width: 100%;
+}
+
+.empty {
+  color: #444;
+  font-weight: 600;
+}

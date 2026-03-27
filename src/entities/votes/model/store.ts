@@ -3,7 +3,7 @@ import type { Vote } from "./types";
 import supabase from "@/shared/supabase";
 import { formatVote } from "./formatter";
 import { useAuthStore } from "@/entities/auth/model/store";
-import { useSnackbarStore } from "@/shared/model/snackbar/store";
+import { notifier } from "@/shared/lib/notifier";
 
 interface VotesState {
   votesMap: Map<string, Vote>;
@@ -68,9 +68,7 @@ export const useVotesStore = create<VotesState>((set, get) => ({
 
       if (error) throw error;
 
-      useSnackbarStore
-        .getState()
-        .show("Ваш голос успешно засчитан", "success", 1000);
+      notifier.success("Ваш голос успешно засчитан");
     } catch (error) {
       console.error("Ошбика при голосовании", error);
       const rollbackMap = new Map(currentMap);

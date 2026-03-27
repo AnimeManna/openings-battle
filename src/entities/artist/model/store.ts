@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { useAuthStore } from "@/entities/auth/model/store";
 import supabase from "@/shared/supabase";
 import type { Artist } from "./types";
-import { useSnackbarStore } from "@/shared/model/snackbar/store";
 import { formatArtist } from "./formatter";
+import { notifier } from "@/shared/lib/notifier";
 
 interface ArtistState {
   artistMap: Map<string, Artist>;
@@ -45,9 +45,10 @@ export const useArtistStore = create<ArtistState>((set, get) => ({
   },
   createArtist: async ({ name }) => {
     const userId = useAuthStore.getState().user?.id;
-    const { show } = useSnackbarStore.getState();
     if (!userId) {
-      show("Попытка получения списка неавторизованным пользователем!", "error");
+      notifier.error(
+        "Попытка получения списка неавторизованным пользователем!",
+      );
 
       return {
         data: null,
@@ -72,13 +73,13 @@ export const useArtistStore = create<ArtistState>((set, get) => ({
       newMap.set(data.id, newAnimeData);
 
       set({ artistMap: newMap });
-      show("Исполнителя успешно добавленно", "success");
+      notifier.success("Исполнителя успешно добавленно");
       return {
         data: newAnimeData,
       };
     } catch (error) {
       console.error("Ошибка при добавлении артиста:", error);
-      show("Ошибка при создании, обратитесь к админу", "error");
+      notifier.error("Ошибка при создании, обратитесь к админу");
       return { data: null };
     }
   },

@@ -3,7 +3,7 @@ import type { Opening, SortedOpeningDTO } from "./types";
 import supabase from "@/shared/supabase";
 import { formatSortedOpening } from "./formatter";
 import { useAuthStore } from "@/entities/auth/model/store";
-import { useSnackbarStore } from "@/shared/model/snackbar/store";
+import { notifier } from "@/shared/lib/notifier";
 
 // const DEFAULT_ITEMS_PER_PAGE = 50;
 
@@ -90,9 +90,10 @@ export const useOpeningsStore = create<OpeningsState>((set, get) => ({
     artistIds,
   }) => {
     const userId = useAuthStore.getState().user?.id;
-    const { show } = useSnackbarStore.getState();
     if (!userId) {
-      show("Попытка получения списка неавторизованным пользователем!", "error");
+      notifier.error(
+        "Попытка получения списка неавторизованным пользователем!",
+      );
     }
 
     try {
@@ -134,12 +135,12 @@ export const useOpeningsStore = create<OpeningsState>((set, get) => ({
       if (artistsResult.error)
         throw new Error(`Artists Error: ${artistsResult.error.message}`);
 
-      show("Опенинг успешно добавлен", "success");
+      notifier.success("Опенинг успешно добавлен");
 
       get().fetchSortedOpenings(1);
     } catch (error) {
       console.error("Ошибка при добавлении артиста:", error);
-      show("Ошибка при создании, обратитесь к админу", "error");
+      notifier.error("Ошибка при создании, обратитесь к админу");
     }
   },
 }));

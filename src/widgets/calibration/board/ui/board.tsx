@@ -13,9 +13,9 @@ import {
 import { useOpeningsStore } from "@/entities/openings/model/store";
 import classess from "./board.module.scss";
 import { Modal } from "@/shared/ui/modal/modal";
-import { CustomPlayer } from "@/features/player/ui/custom-player/custom-player";
 import { IconButton } from "@/shared/ui/icon-button/icon-button";
 import { MdClose } from "react-icons/md";
+import { CustomPlayer } from "@/shared/ui/player/ui/custom-player/custom-player";
 
 const getRateId = (rate: number): string => `rate-${rate}`;
 const parseRateFromId = (id: string): number =>
@@ -152,7 +152,10 @@ export const CalibrationBoard: React.FC = () => {
               <IconButton icon={<MdClose />} size="sm" onClick={onCloseModal} />
             </div>
             <div className={classess["modal__wrapper"]}>
-              <CustomPlayer opening={selectedOpening} />
+              <CustomPlayer
+                videoUrl={selectedOpening.videoUrl}
+                backupVideoUrl={selectedOpening.backUpVideoUrl}
+              />
             </div>
           </div>
         </Modal>

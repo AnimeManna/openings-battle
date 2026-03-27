@@ -46,56 +46,6 @@
   }
 }
 
-.title {
-  font-size: 32px;
-  line-height: 36px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.videoWrapper {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: $radius-md;
-  overflow: hidden;
-  border: 1px solid $border-color;
-  position: relative;
-
-  @media (max-width: 1024px) {
-    width: 100%;
-  }
-}
-
-.infoGrid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 16px;
-  row-gap: 8px;
-  align-content: start;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-  }
-}
-
-.label {
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: $text-muted;
-  padding-top: 2px;
-}
-
-.value {
-  font-size: 16px;
-  color: $text-main;
-  font-weight: 500;
-  word-break: break-word;
-  text-align: right;
-}
-
 .link {
   height: 100%;
   display: flex;

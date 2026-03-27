@@ -1,7 +1,7 @@
-import { getYoutubeId } from "@/shared/helpers/getYoutubeId";
 import type { Opening } from "../../model/types";
 import classess from "./opening-card.module.scss";
 import { useMemo } from "react";
+import { getYoutubeThubnail } from "@/shared/helpers/getYoutubeThubnail";
 
 type OpeningCardProps = Opening & {
   actionSlot?: React.ReactNode;
@@ -15,11 +15,7 @@ export const OpeningCard: React.FC<OpeningCardProps> = ({
   actionSlot,
 }) => {
   const youtubeThubnail = useMemo(() => {
-    return (
-      "http://img.youtube.com/vi/" +
-      getYoutubeId(videoUrl) +
-      "/maxresdefault.jpg"
-    );
+    return getYoutubeThubnail(videoUrl);
   }, [videoUrl]);
 
   return (

@@ -4,7 +4,7 @@ import { OpeningListPreview } from "@/features/opening/opening-list-preview/open
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useRef } from "react";
 import { TextField } from "@/shared/ui/text-field/textfield";
-import { useFilteredOpenings } from "@/entities/openings/hooks/useFilteredOpenings";
+import { useFilteredOpenings } from "@/features/opening/hooks/useFilteredOpenings";
 
 export const Openings: React.FC = () => {
   const parentRef = useRef<HTMLDivElement>(null);

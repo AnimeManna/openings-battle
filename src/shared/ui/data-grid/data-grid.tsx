@@ -37,7 +37,10 @@ export const DataGrid = <TData, TValue>({
     onColumnPinningChange: setColumnPinning,
   });
 
-  const getCommonPinningStyles = (column: Column<TData>): CSSProperties => {
+  const getCommonPinningStyles = (
+    column: Column<TData>,
+    isHeader?: boolean,
+  ): CSSProperties => {
     const isPinned = column.getIsPinned();
     const isLastLeftPinnedColumn =
       isPinned === "left" && column.getIsLastColumn("left");
@@ -52,10 +55,11 @@ export const DataGrid = <TData, TValue>({
           : undefined,
       left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
       right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,
+      top: isHeader ? 0 : undefined,
       opacity: isPinned ? 0.95 : 1,
-      position: isPinned ? "sticky" : "relative",
+      position: isPinned || isHeader ? "sticky" : "relative",
       width: column.getSize(),
-      zIndex: isPinned ? 1 : 0,
+      zIndex: isPinned ? 10 : isHeader ? 5 : 0,
     };
   };
 
@@ -70,7 +74,7 @@ export const DataGrid = <TData, TValue>({
               style={{
                 width: header.getSize(),
                 minWidth: header.getSize(),
-                ...getCommonPinningStyles(header.column),
+                ...getCommonPinningStyles(header.column, true),
               }}
             >
               {flexRender(header.column.columnDef.header, header.getContext())}
