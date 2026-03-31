@@ -4,14 +4,14 @@ import type { RoundVote } from "./types";
 import { notifier } from "@/shared/lib/notifier";
 import { formatRoundVote } from "./formatter";
 
-type OpeningId = string;
-
 interface RoundVotesStore {
-  roundVotesMap: Map<OpeningId, RoundVote>;
+  roundVotesMap: Map<string, Set<string>>;
 
   fetchAllRoundVotes: (userId: string) => Promise<void>;
 
   submitRoundVote: (roundVote: RoundVote) => Promise<void>;
+
+  removeVote: (roundVote: RoundVote) => Promise<void>;
 }
 
 export const useRoundVotesStore = create<RoundVotesStore>((set, get) => ({
@@ -33,8 +33,13 @@ export const useRoundVotesStore = create<RoundVotesStore>((set, get) => ({
       const newMap = new Map();
 
       formattedData.forEach((roundVote) => {
-        newMap.set(roundVote.openingId, roundVote);
+        const roundSet: Set<string> =
+          newMap.get(roundVote.roundId) ?? new Set();
+
+        newMap.set(roundVote.roundId, roundSet.add(roundVote.openingId));
       });
+
+      console.log(newMap);
 
       set({ roundVotesMap: newMap });
     }
@@ -42,11 +47,12 @@ export const useRoundVotesStore = create<RoundVotesStore>((set, get) => ({
   submitRoundVote: async (newRoundVote) => {
     const { userId, roundId, openingId } = newRoundVote;
     const currentMap = get().roundVotesMap;
-    const prevState = currentMap.get(openingId);
 
     const optimisticMap = new Map(currentMap);
+    const roundSet = currentMap.get(roundId);
+    const optimisticSet = new Set(roundSet);
 
-    optimisticMap.set(openingId, newRoundVote);
+    optimisticMap.set(roundId, optimisticSet.add(openingId));
 
     set({ roundVotesMap: optimisticMap });
 
@@ -56,19 +62,49 @@ export const useRoundVotesStore = create<RoundVotesStore>((set, get) => ({
         round_id: roundId,
         user_id: userId,
       });
-      notifier.success("Ваш голос успешно засчитан");
       if (error) throw error;
+      notifier.success("Ваш голос успешно засчитан");
     } catch (error) {
       console.error("Ошбика при голосовании", error);
       notifier.error("Произошла ошибка, попробуйте позже");
-      const rollbackMap = new Map(currentMap);
-      if (prevState) {
-        rollbackMap.set(openingId, prevState);
-      } else {
-        rollbackMap.delete(openingId);
-      }
 
-      set({ roundVotesMap: rollbackMap });
+      set({ roundVotesMap: currentMap });
+    }
+  },
+
+  removeVote: async ({ openingId, roundId, userId }) => {
+    const currentMap = get().roundVotesMap;
+
+    const optimisticMap = new Map(currentMap);
+
+    const roundSet = currentMap.get(roundId);
+
+    if (!roundSet) {
+      notifier.info("Не удалось отменить голос");
+      return;
+    }
+
+    const optimisticSet = new Set(roundSet);
+
+    optimisticSet.delete(openingId);
+
+    optimisticMap.set(roundId, optimisticSet);
+
+    set({ roundVotesMap: optimisticMap });
+
+    try {
+      const { error } = await supabase.from("round_votes").delete().match({
+        opening_id: openingId,
+        user_id: userId,
+        round_id: roundId,
+      });
+      if (error) throw error;
+      notifier.success("Ваш голос успешно удален");
+    } catch (error) {
+      console.error("Ошбика при голосовании", error);
+      notifier.error("Произошла ошибка, попробуйте позже");
+
+      set({ roundVotesMap: currentMap });
     }
   },
 }));

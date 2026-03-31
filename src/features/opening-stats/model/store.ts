@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import supabase from "@/shared/supabase";
 import type { Profile } from "@/entities/auth/model/types";
-import type { OpeningDTO } from "@/entities/openings/model/types";
+import type { Opening } from "@/entities/openings/model/types";
 import { fetchAll } from "./helpers";
 import type { VoteDTO } from "@/entities/votes/model/types";
+import { useOpeningsStore } from "@/entities/openings/model/store";
 
-export type StatOpening = OpeningDTO & {
+export type StatOpening = Opening & {
   avgScore: number;
-  animeTitle: string;
 };
 
 interface OpeningStatsState {
@@ -33,29 +33,28 @@ export const useOpeningStatsStore = create<OpeningStatsState>((set) => ({
         "votes",
         "user_id, opening_id, rate",
       );
-      const [profilesRes, openingsRes, metricsRes] = await Promise.all([
+      const [profilesRes, metricsRes] = await Promise.all([
         supabase
           .from("profiles")
           .select("*")
           .neq("is_service_account", true)
           .order("username"),
-        supabase.from("openings").select("*, anime(*)"),
         supabase.from("opening_metrics").select("*"),
       ]);
 
       if (profilesRes.error) throw profilesRes.error;
-      if (openingsRes.error) throw openingsRes.error;
       const metricsMap = new Map<string, number>();
       metricsRes.data?.forEach((openingMetric) =>
         metricsMap.set(openingMetric.opening_id, openingMetric.avg_score ?? 0),
       );
 
-      const rows: StatOpening[] = (openingsRes.data || [])
+      const openings = Array.from(
+        useOpeningsStore.getState().openingsMap.values(),
+      );
+
+      const rows: StatOpening[] = (openings || [])
         .map((op) => ({
           ...op,
-          animeTitle: Array.isArray(op.anime)
-            ? (op.anime[0]?.english_title ?? "")
-            : op.anime?.english_title || "No Anime",
           avgScore: metricsMap.get(op.id) ?? 0,
         }))
         .sort((a, b) => b.avgScore - a.avgScore);

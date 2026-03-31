@@ -10,6 +10,11 @@
   height: 100%;
   min-height: 1px;
   overflow-y: auto;
+
+  background-image: url("@/assets/images/background.png");
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  background-size: 20%;
 }
 
 .toolbar {

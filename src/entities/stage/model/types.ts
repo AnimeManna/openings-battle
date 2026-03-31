@@ -12,4 +12,5 @@ export interface Stage {
   maxChoicesPerRound: number;
   status: StageStatus;
   format: StageFormat;
+  completedAt: string;
 }

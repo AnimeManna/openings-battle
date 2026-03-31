@@ -562,7 +562,7 @@ export type Database = {
           id: string
           name: string
           order_num: number
-          stage_id: string | null
+          stage_id: string
           start_at: string
           status: Database["public"]["Enums"]["round_status"]
         }
@@ -571,7 +571,7 @@ export type Database = {
           id?: string
           name: string
           order_num: number
-          stage_id?: string | null
+          stage_id: string
           start_at?: string
           status?: Database["public"]["Enums"]["round_status"]
         }
@@ -580,7 +580,7 @@ export type Database = {
           id?: string
           name?: string
           order_num?: number
-          stage_id?: string | null
+          stage_id?: string
           start_at?: string
           status?: Database["public"]["Enums"]["round_status"]
         }
@@ -791,6 +791,17 @@ export type Database = {
           title: string
           youtube_url_extra: string
           youtube_url_main: string
+        }[]
+      }
+      get_sorted_rounds: {
+        Args: { p_stage_id: string; p_user_id: string }
+        Returns: {
+          id: string
+          max_choices: number
+          name: string
+          opning_ids: string[]
+          start_at: string
+          status: Database["public"]["Enums"]["round_status"]
         }[]
       }
     }

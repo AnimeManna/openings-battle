@@ -1,8 +1,7 @@
 import { useStageStore } from "@/entities/stage/model/store";
 import { useMemo } from "react";
 import classess from "./stages.module.scss";
-import clsx from "clsx";
-import { useNavigate } from "react-router";
+import { StagePreviewCard } from "@/widgets/stage-preview-card/stage-preview-card";
 
 export const StagesPage: React.FC = () => {
   const { stagesMap } = useStageStore();
@@ -12,28 +11,12 @@ export const StagesPage: React.FC = () => {
     [stagesMap],
   );
 
-  const navigate = useNavigate();
-
-  const navigateToStage = (id: string) => {
-    navigate(`/stages/${id}`);
-  };
-
   return (
     <div className={classess.container}>
       <ul className={classess.list}>
         {stagesArray.length > 0 &&
           stagesArray.map((stage) => (
-            <li
-              className={clsx(classess.item, {
-                [classess.active]: stage.status === "pending",
-              })}
-              onClick={() => {
-                navigateToStage(stage.id);
-              }}
-              key={stage.id}
-            >
-              <p className={classess.title}>{stage.name}</p>
-            </li>
+            <StagePreviewCard key={stage.id} stageId={stage.id} />
           ))}
       </ul>
     </div>

@@ -1,0 +1,29 @@
+.container {
+  width: 100%;
+  height: 100%;
+  border: 1px solid $accent-primary;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: $bg-elevated;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  row-gap: 16px;
+  position: relative;
+}
+
+.isVoted {
+  border-color: $accent-gold;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rate {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+}

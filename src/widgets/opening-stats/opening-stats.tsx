@@ -8,6 +8,9 @@ import {
   type StatOpening,
 } from "@/features/opening-stats/model/store";
 import { AdminBadge } from "@/features/opening-stats/ui/badge/opening-stats-badge";
+import { OpeningCard } from "@/entities/openings/ui/card/opening-card";
+import { Button } from "@/shared/ui/button/button";
+import { useNavigate } from "react-router";
 
 type OpeningRow = StatOpening;
 
@@ -23,20 +26,30 @@ export const OpeningsStatsWidget: React.FC = () => {
     fetchAdminData();
   }, []);
 
+  const navigate = useNavigate();
+
   const columns = useMemo<ColumnDef<OpeningRow>[]>(() => {
     if (!allUsers || !allUsers.length) return [];
 
     const baseColumn: ColumnDef<OpeningRow> = {
       id: "opening",
       header: "Opening Name",
-      size: 600,
+      size: 300,
       cell: (info) => {
         const opening = info.row.original;
         return (
-          <div className={classess.openingName} title={opening.animeTitle}>
-            <span className={classess.trackName}>{opening.title}</span>{" "}
-            <span className={classess.trackAnime}>{opening.animeTitle}</span>
-          </div>
+          <OpeningCard
+            {...opening}
+            actionSlot={
+              <Button
+                onClick={() => {
+                  navigate(`/openings/${opening.id}`);
+                }}
+              >
+                Посмотреть
+              </Button>
+            }
+          />
         );
       },
     };
@@ -69,7 +82,7 @@ export const OpeningsStatsWidget: React.FC = () => {
     };
 
     return [baseColumn, ...userColumns, avgColumn];
-  }, [allUsers, votesMatrix]);
+  }, [allUsers, votesMatrix, navigate]);
 
   return (
     <div className={classess.container}>

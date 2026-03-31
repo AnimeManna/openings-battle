@@ -4,18 +4,19 @@ import supabase from "@/shared/supabase";
 import { formatRound } from "./formatter";
 interface RoundsState {
   roundsMap: Map<string, Round>;
-  fetchRounds: (stageId: string) => Promise<void>;
+  fetchRounds: (userId: string, stageId: string) => Promise<void>;
+  currentStageId: string | null;
 }
 
-export const useRoundsStore = create<RoundsState>((set) => ({
+export const useRoundsStore = create<RoundsState>((set, get) => ({
   roundsMap: new Map(),
-  fetchRounds: async (stageId: string) => {
-    const { data } = await supabase
-      .from("rounds")
-      .select(
-        "*, opening_ids:round_participants!round_participants_round_id_fkey(opening_id)",
-      )
-      .eq("stage_id", stageId);
+  currentStageId: null,
+  fetchRounds: async (userId: string, stageId: string) => {
+    if (stageId === get().currentStageId) return;
+    const { data } = await supabase.rpc("get_sorted_rounds", {
+      p_stage_id: stageId,
+      p_user_id: userId,
+    });
     if (!data) return;
     const formattedData = data.map(formatRound);
 
@@ -25,7 +26,7 @@ export const useRoundsStore = create<RoundsState>((set) => ({
       newMap.set(round.id, round);
     });
 
-    set({ roundsMap: newMap });
+    set({ roundsMap: newMap, currentStageId: stageId });
 
     return;
   },

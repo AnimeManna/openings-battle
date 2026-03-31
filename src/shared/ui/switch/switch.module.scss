@@ -19,7 +19,7 @@ $color-thumb: #ffffff;
   display: inline-block;
   width: $width;
   height: $height;
-  flex-shrink: 0; // Чтобы не сжимался
+  flex-shrink: 0;
 }
 
 .input {

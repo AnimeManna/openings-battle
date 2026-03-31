@@ -11,14 +11,25 @@ import { MdFormatListBulleted } from "react-icons/md";
 import { MdQueryStats } from "react-icons/md";
 import { TbTournament } from "react-icons/tb";
 import { TbCards } from "react-icons/tb";
+import { useRoundsStore } from "@/entities/rounds/model/store";
+import { useRoundVotesStore } from "@/entities/round-votes/model/store";
 
 export const HomeComponent: React.FC = () => {
   const openings = useOpeningsStore((state) => state.openings);
   const votes = useVotesStore((state) => state.votesMap);
 
+  const rounds = useRoundsStore((state) => state.roundsMap);
+  const roundVotes = useRoundVotesStore((state) => state.roundVotesMap);
+
   const nextOpening = useMemo(
     () => openings.find((opening) => !votes.get(opening.id)),
     [openings, votes],
+  );
+
+  const nextRound = useMemo(
+    () =>
+      Array.from(rounds.values()).find((round) => !roundVotes.get(round.id)),
+    [roundVotes, rounds],
   );
 
   return (
@@ -26,13 +37,15 @@ export const HomeComponent: React.FC = () => {
       <div className={classess.tile}>
         <HomeInfo />
       </div>
-      <div className={classess.tile}>
-        <NavTile
-          icon={<TbCards />}
-          label="Продолжить второй этап"
-          to="/openings"
-        />
-      </div>
+      {nextRound && (
+        <div className={classess.tile}>
+          <NavTile
+            icon={<TbCards />}
+            label="Продолжить второй этап"
+            to={`/round/${nextRound.id}`}
+          />
+        </div>
+      )}
       <div className={classess.tile}>
         <NavTile icon={<TbTournament />} label="Стейджи" to="/stages" />
       </div>
