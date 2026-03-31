@@ -11,10 +11,19 @@
   min-height: 1px;
   overflow-y: auto;
 
-  background-image: url("@/assets/images/background.png");
-  background-position: right bottom;
+  background-image:
+    url("@/assets/images/bocchi.png"), url("@/assets/images/background.png");
+  background-position:
+    left bottom,
+    right bottom;
   background-repeat: no-repeat;
-  background-size: 20%;
+  background-size: 35%, 20%;
+
+  @media (max-width: 1024px) {
+    background-image: url("@/assets/images/background.png");
+    background-position: right bottom;
+    background-size: 100%;
+  }
 }
 
 .toolbar {

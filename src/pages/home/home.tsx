@@ -40,6 +40,7 @@ export const HomeComponent: React.FC = () => {
       {nextRound && (
         <div className={classess.tile}>
           <NavTile
+            variant="glass"
             icon={<TbCards />}
             label="Продолжить второй этап"
             to={`/round/${nextRound.id}`}
@@ -47,10 +48,16 @@ export const HomeComponent: React.FC = () => {
         </div>
       )}
       <div className={classess.tile}>
-        <NavTile icon={<TbTournament />} label="Стейджи" to="/stages" />
+        <NavTile
+          variant="glass"
+          icon={<TbTournament />}
+          label="Стейджи"
+          to="/stages"
+        />
       </div>
       <div className={classess.tile}>
         <NavTile
+          variant="glass"
           icon={<GiTrophyCup />}
           label="Общий тир лист"
           to="/tier-list"
@@ -59,6 +66,7 @@ export const HomeComponent: React.FC = () => {
       {nextOpening && (
         <div className={classess.tile}>
           <NavTile
+            variant="glass"
             icon={<FaVoteYea />}
             label="Продолжить голосование"
             to={`/openings/${nextOpening.id}`}
@@ -66,10 +74,16 @@ export const HomeComponent: React.FC = () => {
         </div>
       )}
       <div className={classess.tile}>
-        <NavTile icon={<MdListAlt />} label="Мой список" to="/openings" />
+        <NavTile
+          variant="glass"
+          icon={<MdListAlt />}
+          label="Мой список"
+          to="/openings"
+        />
       </div>
       <div className={classess.tile}>
         <NavTile
+          variant="glass"
           icon={<MdQueryStats />}
           label="Моя статистика"
           to="/statistics"
@@ -77,6 +91,7 @@ export const HomeComponent: React.FC = () => {
       </div>
       <div className={classess.tile}>
         <NavTile
+          variant="glass"
           icon={<MdFormatListBulleted />}
           label="Калибровка"
           to="/calibration"
