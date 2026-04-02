@@ -10,7 +10,8 @@ import {
 } from "@tanstack/react-table";
 import classess from "./data-grid.module.scss";
 import clsx from "clsx";
-import { useState, type CSSProperties } from "react";
+import { useState, useRef, type CSSProperties } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,6 +36,17 @@ export const DataGrid = <TData, TValue>({
     },
     getCoreRowModel: getCoreRowModel(),
     onColumnPinningChange: setColumnPinning,
+  });
+
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  const { rows } = table.getRowModel();
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => tableContainerRef.current,
+    estimateSize: () => 187,
+    overscan: 5,
   });
 
   const getCommonPinningStyles = (
@@ -65,7 +77,7 @@ export const DataGrid = <TData, TValue>({
 
   return (
     <div className={classess.container}>
-      <div className={classess.table}>
+      <div className={classess.table} ref={tableContainerRef}>
         <div className={clsx(classess.row, classess.header)}>
           {table.getFlatHeaders().map((header) => (
             <div
@@ -81,27 +93,43 @@ export const DataGrid = <TData, TValue>({
             </div>
           ))}
         </div>
-        <div className={classess.body}>
-          {table.getRowModel().rows.map((row) => (
-            <div
-              key={row.id}
-              className={clsx(classess.row, classess["body__row"])}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <div
-                  key={cell.id}
-                  className={clsx(classess.column, classess["body__column"])}
-                  style={{
-                    width: cell.column.getSize(),
-                    minWidth: cell.column.getSize(),
-                    ...getCommonPinningStyles(cell.column),
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </div>
-              ))}
-            </div>
-          ))}
+        <div
+          className={classess.body}
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            position: "relative",
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = rows[virtualRow.index];
+            return (
+              <div
+                key={row.id}
+                className={clsx(classess.row, classess["body__row"])}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <div
+                    key={cell.id}
+                    className={clsx(classess.column, classess["body__column"])}
+                    style={{
+                      width: cell.column.getSize(),
+                      minWidth: cell.column.getSize(),
+                      ...getCommonPinningStyles(cell.column),
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
