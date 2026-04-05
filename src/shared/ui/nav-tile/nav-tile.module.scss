@@ -41,6 +41,17 @@
       box-shadow: 0 10px 25px rgba($accent-primary, 0.4);
     }
   }
+
+  &.glass {
+    color: $text-main;
+    border-color: $border-color;
+    background-color: rgba($bg-elevated, 0.7);
+
+    &:hover {
+      color: $accent-hover;
+      border-color: $accent-hover;
+    }
+  }
 }
 
 .iconWrapper {

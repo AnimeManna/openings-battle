@@ -9,9 +9,8 @@ import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
 import { useSwipeable } from "react-swipeable";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Opening } from "@/entities/openings/model/types";
-import { useSnackbarStore } from "@/shared/model/snackbar/store";
 import { useOpeningsStore } from "@/entities/openings/model/store";
-import { CustomPlayer } from "@/features/player/ui/custom-player/custom-player";
+import { OpeningMainInfo } from "@/entities/openings/ui/main-info/opening-main-info";
 
 const variants = {
   enter: (direction: number) => ({
@@ -39,8 +38,6 @@ export const RateOpening: React.FC = () => {
   const { rate, onRate, isProtected, onProtect } = useOpeningVote(
     params.id ?? "",
   );
-
-  const show = useSnackbarStore((state) => state.show);
 
   const navigation: {
     prevId: string | null;
@@ -111,7 +108,6 @@ export const RateOpening: React.FC = () => {
     const numValue = Number(value);
     if (Number.isNaN(numValue)) return;
     onRate(numValue);
-    show("Ваш голос успешно засчитан", "success", 1000);
   };
 
   const scoreArray = Array.from({ length: APP_CONFIG.MAX_SCORE }).map(
@@ -138,22 +134,9 @@ export const RateOpening: React.FC = () => {
             }}
             className={classess.wrapper}
           >
-            <p className={classess.title}>{opening.title}</p>
-            {opening && <CustomPlayer opening={opening} />}
-
-            <div className={classess.infoGrid}>
-              <div className={classess.label}>Аниме</div>
-              <div className={classess.value}>
-                {opening.anime?.englishTitle} / {opening.anime?.japaneseTitle}
-              </div>
-
-              <div className={classess.label}>Сезон</div>
-              <div className={classess.value}>{opening.seasonNum} сезон</div>
-
-              <div className={classess.label}>Номер Опенинга</div>
-              <div className={classess.value}>{opening.openingNum}</div>
+            <div className={classess.info}>
+              <OpeningMainInfo openingId={opening.id} />
             </div>
-
             <div className={classess.rating}>
               <ul className={classess.list}>
                 {scoreArray.map((rating) => (

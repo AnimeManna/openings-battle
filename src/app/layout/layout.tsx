@@ -7,6 +7,8 @@ import { useVotesStore } from "@/entities/votes/model/store";
 import { useAuthStore } from "@/entities/auth/model/store";
 import { Snackbar } from "@/shared/ui/shackbar/snackbar";
 import { useProtectionsStore } from "@/entities/protections/model/store";
+import { useStageStore } from "@/entities/stage/model/store";
+import { useRoundsStore } from "@/entities/rounds/model/store";
 
 export const Layout: React.FC = () => {
   const fetchSortedOpenings = useOpeningsStore(
@@ -18,12 +20,30 @@ export const Layout: React.FC = () => {
   );
   const userId = useAuthStore((state) => state.user?.id);
 
+  const fetchStages = useStageStore((state) => state.fetchStages);
+
+  const stagesMap = useStageStore((state) => state.stagesMap);
+
+  const fetchRounds = useRoundsStore((state) => state.fetchRounds);
+
   useEffect(() => {
     if (!userId) return;
     fetchVotes(userId);
     fetchSortedOpenings(1);
     fetchProtections();
-  }, [fetchSortedOpenings, fetchVotes, fetchProtections, userId]);
+    fetchStages();
+  }, [fetchSortedOpenings, fetchVotes, fetchProtections, fetchStages, userId]);
+
+  useEffect(() => {
+    if (stagesMap.size && userId) {
+      const lastActiveStage = Array.from(stagesMap.values()).find(
+        (stage) => stage.status === "active",
+      );
+      if (lastActiveStage) {
+        fetchRounds(userId, lastActiveStage.id);
+      }
+    }
+  }, [stagesMap, userId, fetchRounds]);
 
   return (
     <div className={classess.container}>

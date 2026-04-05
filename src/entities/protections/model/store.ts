@@ -2,7 +2,7 @@ import { create } from "zustand";
 import supabase from "@/shared/supabase";
 import { useAuthStore } from "@/entities/auth/model/store";
 import { APP_CONFIG } from "@/shared/config";
-import { useSnackbarStore } from "@/shared/model/snackbar/store";
+import { notifier } from "@/shared/lib/notifier";
 
 interface ProtectionState {
   protectionsSet: Set<string>;
@@ -45,7 +45,6 @@ export const useProtectionsStore = create<ProtectionState>((set, get) => ({
   },
 
   submitProtection: async (openingId) => {
-    const { show } = useSnackbarStore.getState();
     const userId = useAuthStore.getState().user?.id;
     if (!userId) {
       console.error("Попытка достать защиту от неавторизованного пользователя");
@@ -62,7 +61,7 @@ export const useProtectionsStore = create<ProtectionState>((set, get) => ({
       optimisticSet.delete(openingId);
     } else {
       if (optimisticSet.size >= MAX_PROTECTION) {
-        show("Вы истратили свою защиту", "error", 1000);
+        notifier.error("Вы истратили свою защиту");
         return;
       }
       optimisticSet.add(openingId);
@@ -91,7 +90,7 @@ export const useProtectionsStore = create<ProtectionState>((set, get) => ({
         "message" in error &&
         typeof error.message === "string"
       ) {
-        show(error.message, "error");
+        notifier.error(error.message);
       }
       set({ protectionsSet: prevProtectionSet });
     }

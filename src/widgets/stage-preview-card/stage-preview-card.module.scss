@@ -1,0 +1,104 @@
+.item {
+  border-radius: 24px;
+  aspect-ratio: 5/3;
+  height: 250px;
+  display: flex;
+  row-gap: newRem(24);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid $bg-elevated;
+
+  cursor: pointer;
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    aspect-ratio: unset;
+  }
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  user-select: none;
+  padding: 8px;
+  padding-top: 0;
+  border: 1px solid $bg-elevated;
+  border-top: none;
+}
+
+.timer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &__label {
+    font-size: 16px;
+  }
+
+  &__value {
+    font-size: 24px;
+    font-weight: 600;
+  }
+}
+
+@mixin rings($duration, $delay) {
+  content: "";
+  opacity: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: 8px solid rgba($accent-gold, 1);
+  border-radius: 24px;
+  animation-name: ripple;
+  animation-duration: $duration;
+  animation-delay: $delay;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.34, 1);
+}
+
+.active {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.25);
+  background-color: $bg-elevated;
+  border: 1px solid $accent-gold;
+
+  transition: background-color 0.1s ease-in-out;
+
+  .title {
+    border-color: $accent-gold;
+  }
+
+  &:hover {
+    background-color: $accent-gold;
+    color: $bg-main;
+  }
+
+  &::after {
+    @include rings(3s, 0s);
+  }
+
+  &::before {
+    @include rings(3s, 1.5s);
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}

@@ -1,0 +1,31 @@
+.openings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.actions {
+  display: flex;
+  column-gap: 16px;
+  padding: 16px;
+}
+
+.stages-list {
+  display: flex;
+  flex-direction: column;
+  row-gap: newRem(16);
+
+  &__item {
+    display: flex;
+    align-items: center;
+    border: 1px solid $border-color;
+  }
+
+  &__column {
+    font-size: 24px;
+    font-weight: 600;
+    border-right: 1px solid $border-color;
+    padding: 8px;
+    flex: 1;
+    text-align: center;
+  }
+}

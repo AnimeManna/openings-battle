@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: $bg-elevated;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0px 2px 0 $bg-main;
+}

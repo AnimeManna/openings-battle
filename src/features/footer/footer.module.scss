@@ -30,3 +30,17 @@
 .right {
   width: 48px;
 }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.1s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $bg-surface;
+  }
+}

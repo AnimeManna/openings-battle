@@ -418,6 +418,250 @@ export type Database = {
         }
         Relationships: []
       }
+      round_participants: {
+        Row: {
+          is_winner: boolean
+          opening_id: string
+          round_id: string
+          votes_count: number
+        }
+        Insert: {
+          is_winner?: boolean
+          opening_id: string
+          round_id: string
+          votes_count?: number
+        }
+        Update: {
+          is_winner?: boolean
+          opening_id?: string
+          round_id?: string
+          votes_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "round_participants_opening_id_fkey"
+            columns: ["opening_id"]
+            isOneToOne: false
+            referencedRelation: "stage_participants"
+            referencedColumns: ["opening_id"]
+          },
+          {
+            foreignKeyName: "round_participants_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      round_votes: {
+        Row: {
+          created_at: string
+          opening_id: string
+          round_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          opening_id: string
+          round_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          opening_id?: string
+          round_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_vote_must_be_valid_participant"
+            columns: ["round_id", "opening_id"]
+            isOneToOne: false
+            referencedRelation: "round_participants"
+            referencedColumns: ["round_id", "opening_id"]
+          },
+          {
+            foreignKeyName: "phase2_votes_opening_id_fkey"
+            columns: ["opening_id"]
+            isOneToOne: false
+            referencedRelation: "stage_participants"
+            referencedColumns: ["opening_id"]
+          },
+          {
+            foreignKeyName: "phase2_votes_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "rounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "phase2_votes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      round_votes_history: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          opening_id: string
+          operation_type: string | null
+          round_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          opening_id: string
+          operation_type?: string | null
+          round_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          opening_id?: string
+          operation_type?: string | null
+          round_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "round_votes_history_opening_id_fkey"
+            columns: ["opening_id"]
+            isOneToOne: false
+            referencedRelation: "openings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "round_votes_history_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "rounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "round_votes_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rounds: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          order_num: number
+          stage_id: string
+          start_at: string
+          status: Database["public"]["Enums"]["round_status"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          order_num: number
+          stage_id: string
+          start_at?: string
+          status?: Database["public"]["Enums"]["round_status"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          order_num?: number
+          stage_id?: string
+          start_at?: string
+          status?: Database["public"]["Enums"]["round_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rounds_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stage_participants: {
+        Row: {
+          created_at: string
+          opening_id: string
+          seed_score: number
+        }
+        Insert: {
+          created_at?: string
+          opening_id: string
+          seed_score?: number
+        }
+        Update: {
+          created_at?: string
+          opening_id?: string
+          seed_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_participants_opening_id_fkey"
+            columns: ["opening_id"]
+            isOneToOne: true
+            referencedRelation: "openings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stages: {
+        Row: {
+          completed_at: string
+          created_at: string
+          format: Database["public"]["Enums"]["round_format"]
+          id: string
+          max_choices_per_round: number
+          name: string
+          order_num: number
+          participants_per_round: number
+          started_at: string
+          status: Database["public"]["Enums"]["stage_status"]
+          total_participants: number
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          format: Database["public"]["Enums"]["round_format"]
+          id?: string
+          max_choices_per_round?: number
+          name: string
+          order_num: number
+          participants_per_round: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["stage_status"]
+          total_participants: number
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          format?: Database["public"]["Enums"]["round_format"]
+          id?: string
+          max_choices_per_round?: number
+          name?: string
+          order_num?: number
+          participants_per_round?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["stage_status"]
+          total_participants?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: number
@@ -525,6 +769,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_first_stage: {
+        Args: {
+          p_format?: Database["public"]["Enums"]["round_format"]
+          p_max_choices_per_round?: number
+          p_name?: string
+          p_participations_per_round?: number
+          p_rounds_per_day?: number
+        }
+        Returns: string
+      }
+      generate_participants: { Args: never; Returns: undefined }
+      generate_single_elimination: {
+        Args: {
+          p_name: string
+          p_previous_stage_id: string
+          p_rounds_per_day: number
+          p_stage_additional_days: number
+        }
+        Returns: string
+      }
       get_sorted_openings: {
         Args: { p_user_id: string }
         Returns: {
@@ -538,10 +802,24 @@ export type Database = {
           youtube_url_main: string
         }[]
       }
+      get_sorted_rounds: {
+        Args: { p_stage_id: string; p_user_id: string }
+        Returns: {
+          id: string
+          max_choices: number
+          name: string
+          opning_ids: string[]
+          start_at: string
+          status: Database["public"]["Enums"]["round_status"]
+        }[]
+      }
     }
     Enums: {
       app_permission: "openings.delete" | "openings.create"
       app_role: "admin" | "player" | "judge"
+      round_format: "single_elimination" | "round_robin"
+      round_status: "pending" | "active" | "completed"
+      stage_status: "pending" | "active" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -671,6 +949,9 @@ export const Constants = {
     Enums: {
       app_permission: ["openings.delete", "openings.create"],
       app_role: ["admin", "player", "judge"],
+      round_format: ["single_elimination", "round_robin"],
+      round_status: ["pending", "active", "completed"],
+      stage_status: ["pending", "active", "completed"],
     },
   },
 } as const

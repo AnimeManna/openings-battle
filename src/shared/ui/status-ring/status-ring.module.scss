@@ -1,0 +1,30 @@
+.statusRing {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.2s;
+  border: 2px solid $border-color;
+
+  &.default {
+    color: $text-muted;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  &.surface {
+    border-color: $accent-primary;
+    color: $accent-primary;
+    background-color: rgba($accent-primary, 0.1);
+  }
+
+  &.golden {
+    border-color: $accent-gold;
+    color: $accent-gold;
+    box-shadow: 0 0 10px rgba($accent-gold, 0.2);
+  }
+}

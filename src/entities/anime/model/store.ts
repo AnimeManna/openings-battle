@@ -3,7 +3,7 @@ import type { Anime } from "./types";
 import { useAuthStore } from "@/entities/auth/model/store";
 import supabase from "@/shared/supabase";
 import { formatAnime } from "./formatter";
-import { useSnackbarStore } from "@/shared/model/snackbar/store";
+import { notifier } from "@/shared/lib/notifier";
 
 interface AnimeState {
   animeMap: Map<string, Anime>;
@@ -51,9 +51,10 @@ export const useAnimeStore = create<AnimeState>((set, get) => ({
 
   createAnime: async ({ english_title, japanese_title, russian_title }) => {
     const userId = useAuthStore.getState().user?.id;
-    const { show } = useSnackbarStore.getState();
     if (!userId) {
-      show("Попытка получения списка неавторизованным пользователем!", "error");
+      notifier.error(
+        "Попытка получения списка неавторизованным пользователем!",
+      );
 
       return {
         data: null,
@@ -80,13 +81,13 @@ export const useAnimeStore = create<AnimeState>((set, get) => ({
       newMap.set(data.id, newAnimeData);
 
       set({ animeMap: newMap });
-      show("Аниме успешно добавленно", "success");
+      notifier.success("Аниме успешно добавленно");
       return {
         data: newAnimeData,
       };
     } catch (error) {
       console.error("Ошибка при создании аниме:", error);
-      show("Ошибка при создании, обратитесь к админу", "error");
+      notifier.error("Ошибка при создании, обратитесь к админу");
       return { data: null };
     }
   },

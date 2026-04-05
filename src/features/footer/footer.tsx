@@ -8,6 +8,18 @@ import { useAuthStore } from "@/entities/auth/model/store";
 import { isAdmin } from "@/shared/helpers/isAdmin";
 import type { NavigationButton } from "@/shared/types/nav";
 import { GoSignOut } from "react-icons/go";
+import { useState, type MouseEvent } from "react";
+import { Menu } from "@/shared/ui/menu/menu";
+import { MdMenu } from "react-icons/md";
+import type { IconType } from "react-icons";
+import { MdArrowBack } from "react-icons/md";
+
+type MenuOption = {
+  key: string;
+  icon: IconType;
+  label: string;
+  onClick: () => void;
+};
 
 export const MainFooter: React.FC = () => {
   const navigate = useNavigate();
@@ -26,21 +38,50 @@ export const MainFooter: React.FC = () => {
     navigate(link);
   };
 
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const open = Boolean(menuAnchor);
+
+  const closeMenu = () => {
+    setMenuAnchor(null);
+  };
+
+  const openMenu = (event: MouseEvent<HTMLElement>) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const menuOptions: MenuOption[] = [
+    ...(profile && profile.role && isAdmin(profile.role)
+      ? [
+          {
+            key: "admin",
+            icon: MdAdminPanelSettings,
+            label: "Админка",
+            onClick: () => {
+              navigateTo("/admin");
+            },
+          },
+        ]
+      : []),
+    {
+      key: "sign-out",
+      icon: GoSignOut,
+      label: "Выйти",
+      onClick: () => {
+        signOut();
+      },
+    },
+  ];
+
   return (
     <div className={classess.container}>
       <div className={classess.left}>
-        {profile && profile.role && isAdmin(profile.role) && (
-          <div
-            className={classess.item}
-            onClick={() => {
-              navigateTo("/admin");
-            }}
-          >
-            <Tooltip label="Выйти">
-              <IconButton icon={<MdAdminPanelSettings />} size="lg" />
-            </Tooltip>
-          </div>
-        )}
+        <IconButton
+          onClick={() => {
+            navigate(-1);
+          }}
+          icon={<MdArrowBack />}
+          size="lg"
+        />
       </div>
       <ul className={classess.list}>
         {navButtons.map((navButton) => (
@@ -59,16 +100,22 @@ export const MainFooter: React.FC = () => {
       </ul>
 
       <div className={classess.right}>
-        <div
-          className={classess.item}
-          onClick={() => {
-            signOut();
-          }}
-        >
-          <Tooltip label="Выйти">
-            <IconButton icon={<GoSignOut />} size="lg" />
-          </Tooltip>
-        </div>
+        <IconButton onClick={openMenu} icon={<MdMenu />} size="lg" />
+        <Menu open={open} anchorEl={menuAnchor} handleClose={closeMenu}>
+          {menuOptions.map((menuOption) => (
+            <div
+              className={classess["menu-item"]}
+              key={menuOption.key}
+              onClick={() => {
+                menuOption.onClick();
+                closeMenu();
+              }}
+            >
+              <menuOption.icon className={classess.icon} />
+              <p className={classess["menu-item__label"]}>{menuOption.label}</p>
+            </div>
+          ))}
+        </Menu>
       </div>
     </div>
   );
