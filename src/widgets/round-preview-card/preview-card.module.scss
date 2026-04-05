@@ -34,7 +34,6 @@
 .image {
   width: 100%;
   aspect-ratio: 16/9;
-  position: relative;
 }
 
 .blur {
@@ -43,8 +42,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba($bg-elevated, 0.75);
+  background-color: rgba($bg-elevated, 0.9);
   z-index: 10;
+  backdrop-filter: blur(50px);
 }
 
 .start {
@@ -94,5 +94,12 @@
   &__button {
     background-color: $accent-gold;
     color: black;
+  }
+}
+
+.isRoundOpen {
+  .blur {
+    backdrop-filter: unset;
+    background-color: rgba($bg-elevated, 0.75);
   }
 }

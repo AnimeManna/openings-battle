@@ -77,7 +77,10 @@ export const RoundPreviewCard: React.FC<RoundPreviewCardProps> = ({
 
   return (
     <div
-      className={clsx(classess.container, { [classess.allVoted]: isAllVoted })}
+      className={clsx(classess.container, {
+        [classess.allVoted]: isAllVoted,
+        [classess.isRoundOpen]: isRoundOpen,
+      })}
     >
       <div className={classess.header}>
         <p className={classess.title}>{round.name}</p>
