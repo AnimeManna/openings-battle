@@ -14,16 +14,19 @@ export const useRoundVoteStats = (roundId: string) => {
     [roundVotes],
   );
 
+  const isRoundCompleted = useMemo(
+    () => (round ? round.status === "completed" : false),
+    [round],
+  );
+
   const isAllowedToVote = useMemo(
-    () =>
-      round
-        ? round.maxChoices > currentVotesCount && round.status !== "completed"
-        : false,
+    () => (round ? round.maxChoices > currentVotesCount : false),
     [round, currentVotesCount],
   );
 
   return {
     roundVotes,
+    isRoundCompleted,
     isAllowedToVote,
     currentVotesCount,
   };

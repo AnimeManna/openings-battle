@@ -77,3 +77,9 @@
   width: 32px;
   height: 32px;
 }
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}

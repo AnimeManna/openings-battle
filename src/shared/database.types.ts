@@ -780,6 +780,15 @@ export type Database = {
         Returns: string
       }
       generate_participants: { Args: never; Returns: undefined }
+      generate_single_elimination: {
+        Args: {
+          p_name: string
+          p_previous_stage_id: string
+          p_rounds_per_day: number
+          p_stage_additional_days: number
+        }
+        Returns: string
+      }
       get_sorted_openings: {
         Args: { p_user_id: string }
         Returns: {

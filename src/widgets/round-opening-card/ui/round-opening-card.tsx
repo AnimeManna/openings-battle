@@ -9,6 +9,7 @@ import { StatusRing } from "@/shared/ui/status-ring/status-ring";
 import { useVotesStore } from "@/entities/votes/model/store";
 import { Tooltip } from "@/shared/ui/tooltip/tooltip";
 import { useRoundVoteStats } from "@/features/round-vote/hooks/useRoundVoteStats";
+import { useStageStatsStore } from "@/entities/stage-stats/model/store";
 
 interface RoundOpeningCardProps {
   roundId: string;
@@ -20,8 +21,12 @@ export const RoundOpeningCard: React.FC<RoundOpeningCardProps> = ({
   openingId,
 }) => {
   const { handleVote, handleRemoveVote } = useRoundVoteActions(roundId);
-  const { roundVotes, isAllowedToVote } = useRoundVoteStats(roundId);
+  const { roundVotes, isAllowedToVote, isRoundCompleted } =
+    useRoundVoteStats(roundId);
   const { votesMap } = useVotesStore();
+  const userVoted = useStageStatsStore((state) =>
+    state.roundStatsMap.get(roundId)?.get(openingId),
+  );
 
   const isVotedOpening = useMemo(
     () => !!roundVotes?.has(openingId),
@@ -40,6 +45,8 @@ export const RoundOpeningCard: React.FC<RoundOpeningCardProps> = ({
     () => votesMap.get(openingId),
     [votesMap, openingId],
   );
+
+  console.log(isRoundCompleted);
 
   return (
     <div
@@ -64,13 +71,28 @@ export const RoundOpeningCard: React.FC<RoundOpeningCardProps> = ({
         )}
       </div>
       <OpeningMainInfo openingId={openingId} />
-      <Button
-        onClick={onClickHandler}
-        variant={isVotedOpening ? "secondary" : "primary"}
-        disabled={!isAllowedToVote && !isVotedOpening}
-      >
-        {isVotedOpening ? "Убрать голос" : "Проголосовать"}
-      </Button>
+      {isRoundCompleted ? (
+        <div className={classess.result}>
+          <p className={classess["result__title"]}>Проголосовавшие за:</p>
+          {userVoted ? (
+            <p className={classess["result__users"]}>
+              {Array.from(userVoted.values()).join(", ")}
+            </p>
+          ) : (
+            <p className={classess["result__empty"]}>
+              К сожалению никто не выбрал этот опенинг :(
+            </p>
+          )}
+        </div>
+      ) : (
+        <Button
+          onClick={onClickHandler}
+          variant={isVotedOpening ? "secondary" : "primary"}
+          disabled={isRoundCompleted || (!isAllowedToVote && !isVotedOpening)}
+        >
+          {isVotedOpening ? "Убрать голос" : "Проголосовать"}
+        </Button>
+      )}
     </div>
   );
 };

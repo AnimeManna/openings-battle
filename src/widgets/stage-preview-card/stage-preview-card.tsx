@@ -2,7 +2,7 @@ import clsx from "clsx";
 import classess from "./stage-preview-card.module.scss";
 import { useStageStore } from "@/entities/stage/model/store";
 import { useNavigate } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { durationManager } from "@/managers/duration-manager/duration-manager";
 import type { Duration } from "dayjs/plugin/duration";
 import dayjs from "dayjs";
@@ -21,6 +21,11 @@ export const StagePreviewCard: React.FC<StagePreviewCardProps> = ({
 
   const [completedAtDuration, setCompletedAtDuration] = useState<Duration>(
     getDurationBetweenDates(dayjs().utc(), dayjs.utc(stage?.completedAt)),
+  );
+
+  const isStageCompleted = useMemo(
+    () => (stage ? stage.status === "completed" : false),
+    [stage],
   );
 
   const navigate = useNavigate();
@@ -60,7 +65,7 @@ export const StagePreviewCard: React.FC<StagePreviewCardProps> = ({
     >
       <p className={classess.title}>"{stage.name}"</p>
       <div className={classess.timer}>
-        {completedAtDuration.asMilliseconds() > 0 ? (
+        {completedAtDuration.asMilliseconds() > 0 && !isStageCompleted ? (
           <>
             <p className={classess["timer__label"]}>Закончиться через: </p>
             <p className={classess["timer__value"]}>

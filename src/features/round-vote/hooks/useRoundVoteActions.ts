@@ -6,9 +6,13 @@ import { useRoundVoteStats } from "./useRoundVoteStats";
 export const useRoundVoteActions = (roundId: string) => {
   const { submitRoundVote, removeVote } = useRoundVotesStore();
   const { user } = useAuthStore();
-  const { isAllowedToVote } = useRoundVoteStats(roundId);
+  const { isAllowedToVote, isRoundCompleted } = useRoundVoteStats(roundId);
 
   const handleVote = (openingId: string) => {
+    if (isRoundCompleted) {
+      notifier.error("Раунд закончился.");
+      return;
+    }
     if (!isAllowedToVote) {
       notifier.error("Слишком много голосов.");
       return;

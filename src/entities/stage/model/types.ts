@@ -13,4 +13,6 @@ export interface Stage {
   status: StageStatus;
   format: StageFormat;
   completedAt: string;
+  totalParticipants: number;
+  participantsPerRound: number;
 }

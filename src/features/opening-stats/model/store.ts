@@ -7,7 +7,9 @@ import type { VoteDTO } from "@/entities/votes/model/types";
 import { useOpeningsStore } from "@/entities/openings/model/store";
 
 export type StatOpening = Opening & {
+  seedScore: number;
   avgScore: number;
+  index: number;
 };
 
 interface OpeningStatsState {
@@ -33,20 +35,30 @@ export const useOpeningStatsStore = create<OpeningStatsState>((set) => ({
         "votes",
         "user_id, opening_id, rate",
       );
-      const [profilesRes, metricsRes] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("*")
-          .neq("is_service_account", true)
-          .order("username"),
-        supabase.from("opening_metrics").select("*"),
-      ]);
+      const [profilesRes, metricsRes, stageParticipantsResponse] =
+        await Promise.all([
+          supabase
+            .from("profiles")
+            .select("*")
+            .neq("is_service_account", true)
+            .order("username"),
+          supabase.from("opening_metrics").select("*"),
+          supabase.from("stage_participants").select("*"),
+        ]);
 
       if (profilesRes.error) throw profilesRes.error;
       const metricsMap = new Map<string, number>();
       metricsRes.data?.forEach((openingMetric) =>
         metricsMap.set(openingMetric.opening_id, openingMetric.avg_score ?? 0),
       );
+
+      const spMap = new Map<string, number>();
+      stageParticipantsResponse.data?.forEach((stageParticipant) => {
+        spMap.set(
+          stageParticipant.opening_id,
+          stageParticipant.seed_score ?? 0,
+        );
+      });
 
       const openings = Array.from(
         useOpeningsStore.getState().openingsMap.values(),
@@ -56,8 +68,11 @@ export const useOpeningStatsStore = create<OpeningStatsState>((set) => ({
         .map((op) => ({
           ...op,
           avgScore: metricsMap.get(op.id) ?? 0,
+          seedScore: spMap.get(op.id) ?? 0,
         }))
-        .sort((a, b) => b.avgScore - a.avgScore);
+        .sort((a, b) => b.avgScore - a.avgScore)
+        .sort((a, b) => b.seedScore - a.seedScore)
+        .map((op, index) => ({ ...op, index: index + 1 }));
 
       const columns = profilesRes.data || [];
 

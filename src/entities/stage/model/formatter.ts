@@ -7,4 +7,6 @@ export const formatStage = (stageDTO: StageDTO): Stage => ({
   status: stageDTO.status,
   format: stageDTO.format,
   completedAt: stageDTO.completed_at,
+  totalParticipants: stageDTO.total_participants,
+  participantsPerRound: stageDTO.participants_per_round,
 });

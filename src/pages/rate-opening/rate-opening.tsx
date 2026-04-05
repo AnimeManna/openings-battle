@@ -134,8 +134,9 @@ export const RateOpening: React.FC = () => {
             }}
             className={classess.wrapper}
           >
-            <OpeningMainInfo openingId={opening.id} />
-
+            <div className={classess.info}>
+              <OpeningMainInfo openingId={opening.id} />
+            </div>
             <div className={classess.rating}>
               <ul className={classess.list}>
                 {scoreArray.map((rating) => (

@@ -39,8 +39,6 @@ export const useRoundVotesStore = create<RoundVotesStore>((set, get) => ({
         newMap.set(roundVote.roundId, roundSet.add(roundVote.openingId));
       });
 
-      console.log(newMap);
-
       set({ roundVotesMap: newMap });
     }
   },

@@ -7,8 +7,8 @@ import { useSwipeable } from "react-swipeable";
 import { NavCorner } from "@/shared/ui/nav-corner/nav-corner";
 import type { Round } from "@/entities/rounds/model/types";
 import { AnimatePresence, motion } from "framer-motion";
-import { isRoundAvalaibleByTime } from "@/entities/rounds/helpers/isRoundAvalaibleByTime";
 import { useRoundVoteStats } from "@/features/round-vote/hooks/useRoundVoteStats";
+import { isRoundAvlaible } from "@/entities/rounds/helpers/isRoundAvalaible";
 
 const variants = {
   enter: (direction: number) => ({
@@ -56,7 +56,7 @@ export const RoundPage: React.FC = () => {
       const nextRound =
         currentIndex < rounds.length - 1 ? rounds[currentIndex + 1] : null;
       if (!nextRound) return null;
-      if (isRoundAvalaibleByTime(nextRound.startAt)) return nextRound.id;
+      if (isRoundAvlaible(nextRound)) return nextRound.id;
       return null;
     };
 
@@ -97,7 +97,7 @@ export const RoundPage: React.FC = () => {
     return <Navigate to="/" />;
   }
 
-  if (!isRoundAvalaibleByTime(round.startAt)) {
+  if (!isRoundAvlaible(round)) {
     return <Navigate to="/" />;
   }
 

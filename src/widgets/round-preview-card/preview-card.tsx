@@ -52,6 +52,11 @@ export const RoundPreviewCard: React.FC<RoundPreviewCardProps> = ({
     };
   }, [roundId, round]);
 
+  const isRoundCompleted = useMemo(
+    () => round?.status === "completed",
+    [round],
+  );
+
   const isRoundOpen = useMemo(
     () => startAtDuration.asMilliseconds() <= 0,
     [startAtDuration],
@@ -112,7 +117,14 @@ export const RoundPreviewCard: React.FC<RoundPreviewCardProps> = ({
         </ul>
 
         <div className={classess.blur}>
-          {isAllVoted ? (
+          {isRoundCompleted ? (
+            <Button
+              onClick={navigateToRound}
+              className={clsx(classess["allVoted__button"])}
+            >
+              Посмотреть результаты
+            </Button>
+          ) : isAllVoted ? (
             <Button
               onClick={navigateToRound}
               className={clsx(classess["allVoted__button"])}

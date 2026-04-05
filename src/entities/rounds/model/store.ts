@@ -12,7 +12,6 @@ export const useRoundsStore = create<RoundsState>((set, get) => ({
   roundsMap: new Map(),
   currentStageId: null,
   fetchRounds: async (userId: string, stageId: string) => {
-    if (stageId === get().currentStageId) return;
     const { data } = await supabase.rpc("get_sorted_rounds", {
       p_stage_id: stageId,
       p_user_id: userId,
@@ -20,7 +19,7 @@ export const useRoundsStore = create<RoundsState>((set, get) => ({
     if (!data) return;
     const formattedData = data.map(formatRound);
 
-    const newMap = new Map();
+    const newMap = get().roundsMap;
 
     formattedData.forEach((round) => {
       newMap.set(round.id, round);

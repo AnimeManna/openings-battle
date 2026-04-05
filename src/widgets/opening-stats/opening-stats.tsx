@@ -13,7 +13,6 @@ import { Button } from "@/shared/ui/button/button";
 import { useNavigate } from "react-router";
 import { TextField } from "@/shared/ui/text-field/textfield";
 import Fuse from "fuse.js";
-import { Select } from "@/shared/ui/select/select";
 
 type OpeningRow = StatOpening;
 
@@ -84,7 +83,31 @@ export const OpeningsStatsWidget: React.FC = () => {
       },
     };
 
-    return [baseColumn, ...userColumns, avgColumn];
+    const orderColumn: ColumnDef<OpeningRow> = {
+      accessorKey: "index",
+      header: "Index",
+      cell: (info) => {
+        const val = info.getValue() as number;
+        return <div className={classess.avgCell}>{val}</div>;
+      },
+    };
+
+    const seedScoreColumn: ColumnDef<OpeningRow> = {
+      accessorKey: "seedScore",
+      header: "Seed Score",
+      cell: (info) => {
+        const val = info.getValue() as number;
+        return <div className={classess.avgCell}>{val.toFixed(1)}</div>;
+      },
+    };
+
+    return [
+      baseColumn,
+      ...userColumns,
+      seedScoreColumn,
+      orderColumn,
+      avgColumn,
+    ];
   }, [allUsers, votesMatrix, navigate]);
 
   const [openingSearch, setOpeningSearch] = useState<string>("");
