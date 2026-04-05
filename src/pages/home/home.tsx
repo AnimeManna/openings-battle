@@ -13,13 +13,18 @@ import { TbTournament } from "react-icons/tb";
 import { TbCards } from "react-icons/tb";
 import { useRoundsStore } from "@/entities/rounds/model/store";
 import { useRoundVotesStore } from "@/entities/round-votes/model/store";
+import { useStageStore } from "@/entities/stage/model/store";
+import { isRoundAvalaibleByTime } from "@/entities/rounds/helpers/isRoundAvalaibleByTime";
+import { useShallow } from "zustand/react/shallow";
 
 export const HomeComponent: React.FC = () => {
   const openings = useOpeningsStore((state) => state.openings);
   const votes = useVotesStore((state) => state.votesMap);
 
-  const rounds = useRoundsStore((state) => state.roundsMap);
+  const rounds = useRoundsStore(useShallow((state) => state.roundsMap));
   const roundVotes = useRoundVotesStore((state) => state.roundVotesMap);
+
+  const { stagesMap } = useStageStore();
 
   const nextOpening = useMemo(
     () => openings.find((opening) => !votes.get(opening.id)),
@@ -28,8 +33,19 @@ export const HomeComponent: React.FC = () => {
 
   const nextRound = useMemo(
     () =>
-      Array.from(rounds.values()).find((round) => !roundVotes.get(round.id)),
-    [roundVotes, rounds],
+      Array.from(rounds.values()).find((round) => {
+        if (round.status === "completed") return null;
+        if (!isRoundAvalaibleByTime(round.startAt)) return null;
+        const rv = roundVotes.get(round.id);
+        const currentStage = Array.from(stagesMap.values()).find(
+          (stage) => stage.status === "active",
+        );
+        if (!currentStage) return null;
+        if (!rv) return round;
+        if (rv.size < currentStage.maxChoicesPerRound) return round;
+        return null;
+      }),
+    [roundVotes, rounds, stagesMap],
   );
 
   return (
