@@ -6,7 +6,6 @@ import classess from "./stage-details.module.scss";
 import { useRoundVotesStore } from "@/entities/round-votes/model/store";
 import { useAuthStore } from "@/entities/auth/model/store";
 import { RoundPreviewCard } from "@/widgets/round-preview-card/preview-card";
-import { useStageStatsStore } from "@/entities/stage-stats/model/store";
 
 export const StageDetails: React.FC = () => {
   const params = useParams<{ stageId: string }>();
@@ -17,15 +16,13 @@ export const StageDetails: React.FC = () => {
   );
   const { fetchAllRoundVotes } = useRoundVotesStore();
   const { user } = useAuthStore();
-  const { fetchStageStats } = useStageStatsStore();
 
   useEffect(() => {
     if (params.stageId && user) {
       fetchRounds(user.id, params.stageId);
       fetchAllRoundVotes(user.id);
-      fetchStageStats(params.stageId);
     }
-  }, [params, fetchRounds, fetchAllRoundVotes, fetchStageStats, user]);
+  }, [params, fetchRounds, fetchAllRoundVotes, user]);
 
   const roundsArray = useMemo(
     () => Array.from(roundsMap.values()),

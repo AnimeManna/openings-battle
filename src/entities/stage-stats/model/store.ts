@@ -1,23 +1,25 @@
 import { create } from "zustand";
-import supabase from "@/shared/supabase";
+import { fetchAll } from "@/features/opening-stats/model/helpers";
 interface StageStatsState {
   roundStatsMap: Map<string, Map<string, Set<string>>>;
-  fetchStageStats: (stageId: string) => Promise<void>;
+  fetchStageStats: () => Promise<void>;
 }
 
 export const useStageStatsStore = create<StageStatsState>((set) => ({
   roundStatsMap: new Map(),
-  fetchStageStats: async (stageId) => {
+  fetchStageStats: async () => {
     try {
-      const { data, error } = await supabase
-        .from("round_votes")
-        .select(
-          `
+      const data = await fetchAll<{
+        opening_id: string;
+        round_id: string;
+        profiles: { username: string };
+        rounds: { stage_id: string };
+      }>(
+        "round_votes",
+        `
       opening_id, round_id, profiles!inner ( username ), rounds!inner (stage_id)`,
-        )
-        .eq("rounds.stage_id", stageId);
+      );
 
-      if (error) throw error;
       const newMap = new Map();
 
       data.forEach((roundVote) => {

@@ -9,6 +9,7 @@ import { Snackbar } from "@/shared/ui/shackbar/snackbar";
 import { useProtectionsStore } from "@/entities/protections/model/store";
 import { useStageStore } from "@/entities/stage/model/store";
 import { useRoundsStore } from "@/entities/rounds/model/store";
+import { useStageStatsStore } from "@/entities/stage-stats/model/store";
 
 export const Layout: React.FC = () => {
   const fetchSortedOpenings = useOpeningsStore(
@@ -24,6 +25,7 @@ export const Layout: React.FC = () => {
 
   const stagesMap = useStageStore((state) => state.stagesMap);
 
+  const { fetchStageStats } = useStageStatsStore();
   const fetchRounds = useRoundsStore((state) => state.fetchRounds);
 
   useEffect(() => {
@@ -32,7 +34,15 @@ export const Layout: React.FC = () => {
     fetchSortedOpenings(1);
     fetchProtections();
     fetchStages();
-  }, [fetchSortedOpenings, fetchVotes, fetchProtections, fetchStages, userId]);
+    fetchStageStats();
+  }, [
+    fetchSortedOpenings,
+    fetchVotes,
+    fetchProtections,
+    fetchStages,
+    fetchStageStats,
+    userId,
+  ]);
 
   useEffect(() => {
     if (stagesMap.size && userId) {
