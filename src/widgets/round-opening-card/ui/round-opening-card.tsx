@@ -14,11 +14,13 @@ import { useStageStatsStore } from "@/entities/stage-stats/model/store";
 interface RoundOpeningCardProps {
   roundId: string;
   openingId: string;
+  isWinner: boolean;
 }
 
 export const RoundOpeningCard: React.FC<RoundOpeningCardProps> = ({
   roundId,
   openingId,
+  isWinner,
 }) => {
   const { handleVote, handleRemoveVote } = useRoundVoteActions(roundId);
   const { roundVotes, isAllowedToVote, isRoundCompleted } =
@@ -73,6 +75,7 @@ export const RoundOpeningCard: React.FC<RoundOpeningCardProps> = ({
       <OpeningMainInfo openingId={openingId} />
       {isRoundCompleted ? (
         <div className={classess.result}>
+          {isWinner ? "Победитель раунда" : null}
           <p className={classess["result__title"]}>Проголосовавшие за:</p>
           {userVoted ? (
             <p className={classess["result__users"]}>

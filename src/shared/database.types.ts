@@ -808,7 +808,7 @@ export type Database = {
           id: string
           max_choices: number
           name: string
-          opning_ids: string[]
+          opening_ids: Json
           start_at: string
           status: Database["public"]["Enums"]["round_status"]
         }[]

@@ -9,7 +9,7 @@ export type Round = {
   id: string;
   name: string;
   status: RoundStatus;
-  openingIds: string[];
+  openingIds: { openingId: string; isWinner: boolean }[];
   startAt: string;
   maxChoices: number;
 };

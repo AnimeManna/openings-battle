@@ -16,7 +16,7 @@ export const RoundRobinGrid: React.FC<RoundRobinGridProps> = ({
 
   return round ? (
     <ul className={classess.grid}>
-      {round.openingIds.map((openingId) => (
+      {round.openingIds.map(({ openingId, isWinner }) => (
         <li key={openingId} className={classess.cell}>
           {renderOpeningCard(openingId)}
         </li>

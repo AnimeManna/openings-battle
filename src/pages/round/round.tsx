@@ -133,11 +133,12 @@ export const RoundPage: React.FC = () => {
           >
             {round && (
               <ul className={classess.grid}>
-                {round.openingIds.map((openingId) => (
+                {round.openingIds.map(({ openingId, isWinner }) => (
                   <li key={openingId} className={classess.item}>
                     <RoundOpeningCard
                       roundId={round.id}
                       openingId={openingId}
+                      isWinner={isWinner}
                     />
                   </li>
                 ))}
