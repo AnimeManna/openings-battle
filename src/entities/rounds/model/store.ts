@@ -8,7 +8,7 @@ interface RoundsState {
   currentStageId: string | null;
 }
 
-export const useRoundsStore = create<RoundsState>((set, get) => ({
+export const useRoundsStore = create<RoundsState>((set) => ({
   roundsMap: new Map(),
   currentStageId: null,
   fetchRounds: async (userId: string, stageId: string) => {
@@ -19,7 +19,9 @@ export const useRoundsStore = create<RoundsState>((set, get) => ({
     if (!data) return;
     const formattedData = data.map(formatRound);
 
-    const newMap = get().roundsMap;
+    console.log(stageId, formattedData);
+
+    const newMap = new Map();
 
     formattedData.forEach((round) => {
       newMap.set(round.id, round);
