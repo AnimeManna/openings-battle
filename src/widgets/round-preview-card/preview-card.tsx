@@ -93,7 +93,7 @@ export const RoundPreviewCard: React.FC<RoundPreviewCardProps> = ({
       </div>
       <div className={classess.wrapper}>
         <ul className={classess.list}>
-          {round.openingIds.map(({ openingId, isWinner }) => {
+          {round.openingIds.map(({ openingId }) => {
             const opening = openingsMap.get(openingId);
 
             return opening ? (
